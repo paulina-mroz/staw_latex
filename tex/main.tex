@@ -1,0 +1,48 @@
+\documentclass[a4paper,10pt,twoside,openright]{report}
+\usepackage[utf8x]{inputenc}
+\usepackage{ucs}
+\usepackage[T2A,T1]{fontenc}
+\usepackage[a4paper,top=1.5cm,bottom=1.5cm,left=1.5cm,right=1.5cm]{geometry}
+
+% \usepackage{fontspec}
+\usepackage{helvet}
+\renewcommand{\rmdefault}{phv}
+
+\usepackage{shellesc}
+\usepackage{tikz}
+\usetikzlibrary{external}
+% \tikzexternalize[prefix=tikz_external/]
+% \tikzset{external/force remake}
+\usepackage{mwe}
+\usetikzlibrary{shapes,arrows.meta,positioning,backgrounds,fit,fadings}
+\usepackage{pgfplots}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage[outline]{contour}
+
+\author{Paulina Mr\'oz}
+\title{STAW cards}
+\date{20201}
+
+\usepackage[pdftex,
+            pdfauthor={Paulina Mr\'oz},
+            pdftitle={STAW cadrs},
+            pdfsubject={STAW},
+            pdfkeywords={STAW},
+            pdfproducer={Latex},
+            pdfcreator={pdflatex},
+            hidelinks]{hyperref}
+
+\usepackage[none]{hyphenat}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\inlinegraphics}[1]{%
+\raisebox{-0.2em}{\includegraphics[height=1em]{#1}}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+\pagestyle{empty}
+
+\input{cards}
+
+\end{document}
