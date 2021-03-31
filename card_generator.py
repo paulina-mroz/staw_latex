@@ -16,9 +16,7 @@ class CardTexGenerator(object):
         self.jsonParams = 'json/card_style_parameters.json'
         self.outputTexFile = 'tex/cards.tex'
 
-        # self.colorTheme = "white_and_black"
-        # self.colorTheme = "color_and_white"
-        self.colorTheme = "color_and_black"
+        self.colorTheme = "test_color"
         self.ifIncludePictures = True
         self.ifIncludeFrame = True
         self.cardSize = "mini"
@@ -30,18 +28,26 @@ class CardTexGenerator(object):
 
     def print_debug (self, message):
         if self.debug:
-            print(message)
+            print("=== DEBUG === {:s}".format(message))
 
     def readJsonData (self):
         with open(self.jsonFile,encoding="utf8") as f:
             self.data = json.loads(f.read())
         with open(self.jsonParams,encoding="utf8") as f:
             self.cardParams = json.loads(f.read())
-        self.print_debug("readJsonData done\n===")
+        self.print_debug("readJsonData done")
 
 
     def addTex (self, line):
         self.texContent = self.texContent+line+"\n"
+
+    def customColors (self):
+        colors = self.cardParams["colors"][self.colorTheme]
+        print(colors)
+        self.print_debug("customColors done")
+
+        for name,hex in colors.items():
+            self.addTex(r"\definecolor{"+name+r"}{HTML}{"+hex+r"}")
 
     # def setTikzStyle (self):
     #     colors = self.cardParams["damage"]["color_and_black"]
@@ -50,16 +56,18 @@ class CardTexGenerator(object):
     #     print(size)
     #
     #     print(self.texContent)
-    #     print("setTikzStyle done\n===")
+    #     print("setTikzStyle done")
 
     def writeTexFile (self):
+        print(self.texContent)
         f = open(self.outputTexFile, "w")
         f.write(self.texContent)
         f.close()
-        self.print_debug("writeTexFile done\n===")
+        self.print_debug("writeTexFile done")
 
     def doTheThing (self):
         self.readJsonData()
+        self.customColors()
         self.writeTexFile()
 
 
