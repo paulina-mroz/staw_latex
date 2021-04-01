@@ -129,6 +129,7 @@ dmypy.json
 .pyre/
 
 misc/
+cards/
 json/*
 !json/card_style_parameters.json
 tex/*

@@ -19,6 +19,7 @@ class CardTexGenerator(object):
 
         # self.colorTheme = "test_color"
         self.colorTheme = "black_and_color"
+        # self.colorTheme = "white_and_color"
         self.ifIncludePictures = True
         self.ifIncludeFrame = True
         self.cardSize = "mini"
@@ -121,9 +122,10 @@ class CardTexGenerator(object):
 
         self.addTex(r"\begin{tikzpicture}")
         self.addTex(r"[")
-        self.addTex(r"border_style/.style   = {{ fill=border_fill  , draw=none         , line width=0.0pt    , rounded corners=0.0cm    }},".format(0.0))
-        self.addTex(r"card_style/.style     = {{ fill=card_fill    , draw=card_line    , line width={:.2f}pt , rounded corners={:.2f}cm }},".format(line_width, size["card_round"]))
-        self.addTex(r"textbox_style/.style  = {{ fill=textbox_fill , draw=textbox_line , line width={:.2f}pt , rounded corners={:.2f}cm }},".format(line_width, size["textbox_round"]))
+        self.addTex(r"border_style/.style      = {{ fill=border_fill  , draw=none         , line width=0.0pt    , rounded corners=0.0cm    }},".format(0.0))
+        self.addTex(r"card_style/.style        = {{ fill=card_fill    , draw=card_line    , line width={:.2f}pt , rounded corners={:.2f}cm }},".format(line_width, size["card_round"]))
+        self.addTex(r"textbox_style/.style     = {{ fill=textbox_fill , draw=textbox_line , line width={:.2f}pt , rounded corners={:.2f}cm }},".format(line_width, size["textbox_round"]))
+        self.addTex(r"panel_lines_style/.style = {{ fill=card_fill    , draw=panel_line   , line width={:.2f}pt , rounded corners=0.0cm    }},".format(line_width))
         self.addTex(r"panel_fill_style/.style = {{ fill=panel_fill , draw=none       , line width={:.2f}pt }},".format(0.0))
         self.addTex(r"panel_line_style/.style = {{ fill=none       , draw=panel_line , line width={:.2f}pt }},".format(line_width))
         self.addTex(r"title_style/.style  = { rectangle , inner sep=0.05cm, minimum height = 1cm, fill=title_fill , draw=none , text=title_font , line width=0.0pt , font=\scshape\bfseries },")
@@ -146,6 +148,11 @@ class CardTexGenerator(object):
         self.addTex(r"\begin{scope}")
         self.addTex(self.tikzCShape("clip"            , panel_outer_x1, panel_outer_y1, panel_outer_x2, panel_outer_y2, title_height, panel_thick))
         self.addTex(self.tikzCShape("panel_fill_style", panel_outer_x1, panel_outer_y1, panel_outer_x2, panel_outer_y2, title_height, panel_thick))
+        panel_line1_x1 = panel_outer_x1+1.2*panel_thick
+        panel_line2_y2 = panel_outer_y2-1.2*title_height
+        panel_line_thick = 0.05
+        self.addTex(self.tikzRectangle("panel_lines_style", panel_line1_x1, 0, panel_line1_x1+panel_line_thick, ch))
+        self.addTex(self.tikzRectangle("panel_lines_style", 0, panel_line2_y2-panel_line_thick, cw, panel_line2_y2))
         self.addTex(self.tikzResizedTextNode("title_style", cw/2 + 0.05, panel_outer_y2 - title_height/2, 0.35, 1.0, title_height - 0.1, card["name"].upper()))
         self.addTex(r"\end{scope}")
         self.addTex(r"\begin{scope}")
