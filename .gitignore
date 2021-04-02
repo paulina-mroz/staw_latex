@@ -130,6 +130,7 @@ dmypy.json
 
 misc/
 cards/
+pics*
 json/*
 !json/card_style_parameters.json
 tex/*

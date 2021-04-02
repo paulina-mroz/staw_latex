@@ -63,6 +63,7 @@ class CardTexGenerator(object):
         type = card["type"]
         if type == "damage":
             self.cardDamageTex(card)
+            self.cardBackDamageTex(card)
         # elif x == 'b':
         else:
             print("Card not found!")
@@ -122,7 +123,7 @@ class CardTexGenerator(object):
 
         self.addTex(r"\begin{tikzpicture}")
         self.addTex(r"[")
-        self.addTex(r"border_style/.style      = {{ fill=border_fill  , draw=none         , line width=0.0pt    , rounded corners=0.0cm    }},".format(0.0))
+        self.addTex(r"border_style/.style      = {{ fill=border_fill  , draw=none         , line width={:.2f}pt , rounded corners=0.0cm    }},".format(0.0))
         self.addTex(r"card_style/.style        = {{ fill=card_fill    , draw=card_line    , line width={:.2f}pt , rounded corners={:.2f}cm }},".format(line_width, size["card_round"]))
         self.addTex(r"textbox_style/.style     = {{ fill=textbox_fill , draw=textbox_line , line width={:.2f}pt , rounded corners={:.2f}cm }},".format(line_width, size["textbox_round"]))
         self.addTex(r"panel_lines_style/.style = {{ fill=card_fill    , draw=panel_line   , line width={:.2f}pt , rounded corners=0.0cm    }},".format(line_width))
@@ -171,6 +172,99 @@ class CardTexGenerator(object):
         card_text_tmp = card_text_from_json.replace("\n\n", "\n\n\\vspace{1em}\n")
         card_text = card_text_tmp.replace("ACTION:", "\\textbf{ACTION:}")
         self.addTex(self.tikzTextNode("text_style, text width={:.2f}cm".format(textbox_x2-textbox_x1-0.1), textbox_x1+((textbox_x2-textbox_x1)/2), textbox_y2-size["textbox_round"], card_text))
+        self.addTex(r"\end{scope}")
+
+        self.addTex(r"\end{tikzpicture}")
+        self.addTex(r"")
+
+    def tikzDamageBackHit (self, style):
+        prefix = self.tikzCommand(style)
+        command = ""
+        command = command + prefix + "\n"
+        command = command + """ (36.42225pt, -198.5916pt) -- (36.42225pt, -198.5916pt)
+         -- (36.42225pt, -198.5916pt)
+         -- (51.66899pt, -193.2883pt)
+         -- (51.66899pt, -193.2883pt)
+         -- (54.7941pt, -190.8261pt)
+         -- (54.7941pt, -190.8261pt)
+         -- (60.57082pt, -180.9773pt)
+         -- (60.57082pt, -180.9773pt)
+         -- (62.08601pt, -172.4542pt)
+         -- (62.08601pt, -172.4542pt)
+         -- (64.54823pt, -185.0494pt)
+         -- (64.54823pt, -185.0494pt)
+         -- (66.63163pt, -189.2162pt)
+         -- (66.63163pt, -189.2162pt)
+         -- (75.43875pt, -195.4664pt)
+         -- (75.43875pt, -195.4664pt)
+         -- (85.47698pt, -198.2127pt)
+         -- (85.47698pt, -198.2127pt)
+         -- (75.72285pt, -200.5802pt)
+         -- (75.72285pt, -200.5802pt)
+         -- (68.52563pt, -205.3152pt)
+         -- (68.52563pt, -205.3152pt)
+         -- (62.65422pt, -215.4481pt)
+         -- (62.65422pt, -215.4481pt)
+         -- (61.32841pt, -223.9712pt)
+         -- (61.32841pt, -223.9712pt)
+         -- (58.7715pt, -213.0806pt)
+         -- (58.7715pt, -213.0806pt)
+         -- (54.88879pt, -205.2205pt)
+         -- (54.88879pt, -205.2205pt)
+         -- (50.53258pt, -202.5689pt)
+         -- (50.53258pt, -202.5689pt)
+         -- (44.18766pt, -199.8226pt) -- cycle
+        ;"""
+        return command
+
+    def tikzCircle (self, style, x, y, r):
+        prefix = self.tikzCommand(style)
+        command = r"{:s} ({:.2f}cm,{:.2f}cm) circle ({:.2f}cm);".format(prefix, x, y, r)
+        return command
+
+    def cardBackDamageTex (self, card):
+        size = self.cardParams["sizes"][card["type"]]["mini"]
+
+        line_width = size["line_width"]
+        cw = size["card_width"]
+        ch = size["card_height"]
+
+        self.addTex(r"\begin{tikzpicture}")
+        self.addTex(r"[")
+        self.addTex(r"border_style/.style  = {{ fill=border_fill  , draw=none         , line width={:.2f}pt    , rounded corners=0.0cm    }},".format(0.0))
+        self.addTex(r"card_style/.style    = {{ fill=dmg_back_card_fill , draw=dmg_back_card_line , line width={:.2f}pt , rounded corners={:.2f}cm }},".format(line_width, size["card_round"]))
+        self.addTex(r"circle_style/.style  = {{ fill=dmg_back_card_fill!60!black , draw=dmg_back_card_line , line width={:.2f}pt }},".format(line_width))
+        self.addTex(r"hitbox_style/.style  = {{ rectangle , inner sep=0.0cm , align=center , fill=none , draw=none, line width={:.2f}pt }}".format(0.0))
+        self.addTex(r"]")
+
+        border_thick = size["border_thick"]
+        self.addTex(r"\begin{scope}")
+        self.addTex(self.tikzRectangle("border_style", 0-border_thick, 0-border_thick, cw+border_thick, ch+border_thick))
+        self.addTex(self.tikzRectangle("card_style", 0, 0, cw, ch))
+        self.addTex(r"\end{scope}")
+
+        self.addTex(r"\begin{scope}")
+        back_hit = r"\resizebox{{ {:.2f}cm }}{{!}}{{".format(0.6*cw) + "\n"
+        back_hit = back_hit + r"\begin{tikzpicture}" + "\n"
+        back_hit = back_hit + r"[" + "\n"
+        # back_hit = back_hit + r"hit_style/.style = {{ inner color=black , outer color=border_fill!70!black , draw=dmg_back_card_fill!60!black , line width={:.2f}pt , rounded corners=0.0cm }}".format(line_width, size["card_round"])
+        back_hit = back_hit + r"hit_style/.style = {{ inner color=black , outer color=border_fill!70!black , draw=none , line width={:.2f}pt , rounded corners=0.0cm }}".format(0.0, size["card_round"])
+        back_hit = back_hit + r"]" + "\n"
+        back_hit = back_hit + self.tikzDamageBackHit("hit_style") + "\n"
+        back_hit = back_hit + r"\end{tikzpicture}"
+        back_hit = back_hit + "}" + "\n"
+        self.addTex(self.tikzTextNode("hitbox_style", cw/2, ch/2, back_hit))
+        self.addTex(r"\end{scope}")
+
+        circle_r = 0.1
+        circle_gap = 3*circle_r
+        self.addTex(r"\begin{scope}")
+        self.addTex(self.tikzCircle("circle_style", 0+circle_gap, 0+circle_gap, circle_r))
+        self.addTex(self.tikzCircle("circle_style", 0+circle_gap, ch/2, circle_r))
+        self.addTex(self.tikzCircle("circle_style", 0+circle_gap, ch-circle_gap, circle_r))
+        self.addTex(self.tikzCircle("circle_style", cw-circle_gap, 0+circle_gap, circle_r))
+        self.addTex(self.tikzCircle("circle_style", cw-circle_gap, ch/2, circle_r))
+        self.addTex(self.tikzCircle("circle_style", cw-circle_gap, ch-circle_gap, circle_r))
         self.addTex(r"\end{scope}")
 
         self.addTex(r"\end{tikzpicture}")
