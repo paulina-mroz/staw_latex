@@ -260,10 +260,14 @@ class CardTexGenerator(object):
         circle_gap = 3*circle_r
         self.addTex(r"\begin{scope}")
         self.addTex(self.tikzCircle("circle_style", 0+circle_gap, 0+circle_gap, circle_r))
+        self.addTex(self.tikzCircle("circle_style", 0+circle_gap, ch/4+0.5*circle_gap, circle_r))
         self.addTex(self.tikzCircle("circle_style", 0+circle_gap, ch/2, circle_r))
+        self.addTex(self.tikzCircle("circle_style", 0+circle_gap, ch*3/4-0.5*circle_gap, circle_r))
         self.addTex(self.tikzCircle("circle_style", 0+circle_gap, ch-circle_gap, circle_r))
         self.addTex(self.tikzCircle("circle_style", cw-circle_gap, 0+circle_gap, circle_r))
+        self.addTex(self.tikzCircle("circle_style", cw-circle_gap, ch/4+0.5*circle_gap, circle_r))
         self.addTex(self.tikzCircle("circle_style", cw-circle_gap, ch/2, circle_r))
+        self.addTex(self.tikzCircle("circle_style", cw-circle_gap, ch*3/4-0.5*circle_gap, circle_r))
         self.addTex(self.tikzCircle("circle_style", cw-circle_gap, ch-circle_gap, circle_r))
         self.addTex(r"\end{scope}")
 
