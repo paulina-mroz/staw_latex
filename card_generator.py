@@ -74,10 +74,10 @@ class CardTexGenerator(object):
 
             texRow = texRow + texCard
             texBackRow = texCardBack + texBackRow
-            texPageTmp = texPage + texRow + "\n\\vspace{1ex}\n"
-            texBackPageTmp = texBackPage + texBackRow + "\n\\vspace{1ex}\n"
-            texAllTmp = texAll + texPageTmp + "\n\\newpage\n"
-            texAllTmp = texAllTmp + texBackPageTmp + "\n\\newpage\n"
+            texPageTmp = texPage + texRow + "\n"
+            texBackPageTmp = texBackPage + texBackRow + "\n"
+            texAllTmp = texAll + texPageTmp + "\\newpage"
+            texAllTmp = texAllTmp + texBackPageTmp + "\\newpage"
             currCol = currCol + 1
             if currCol >= limitCol:
                 currCol = 0
@@ -167,7 +167,8 @@ class CardTexGenerator(object):
 
         tex = tex + r"\begin{tikzpicture}" + "\n"
         tex = tex + r"[" + "\n"
-        tex = tex + r"border_style/.style      = {{ fill=border_fill  , draw=none         , line width={:.2f}pt , rounded corners=0.0cm    }},".format(0.0) + "\n"
+        # tex = tex + r"border_style/.style      = {{ fill=border_fill  , draw=none         , line width={:.2f}pt , rounded corners=0.0cm    }},".format(0.0) + "\n"
+        tex = tex + r"border_style/.style      = {{ fill=none  , draw=white         , line width={:.2f}pt , rounded corners=0.0cm    }},".format(0.0) + "\n"
         tex = tex + r"card_style/.style        = {{ fill=card_fill    , draw=card_line    , line width={:.2f}pt , rounded corners={:.2f}cm }},".format(line_width, size["card_round"]) + "\n"
         tex = tex + r"textbox_style/.style     = {{ fill=textbox_fill , draw=textbox_line , line width={:.2f}pt , rounded corners={:.2f}cm }},".format(line_width, size["textbox_round"]) + "\n"
         tex = tex + r"panel_lines_style/.style = {{ fill=card_fill    , draw=panel_line   , line width={:.2f}pt , rounded corners=0.0cm    }},".format(line_width) + "\n"
@@ -181,7 +182,7 @@ class CardTexGenerator(object):
 
         border_thick = size["border_thick"]
         tex = tex + r"\begin{scope}" + "\n"
-        # tex = tex + self.tikzRectangle("border_style", 0-border_thick, 0-border_thick, cw+border_thick, ch+border_thick) + "\n"
+        tex = tex + self.tikzRectangle("border_style", 0-border_thick, 0-border_thick, cw+border_thick, ch+border_thick) + "\n"
         tex = tex + self.tikzRectangle("card_style", 0, 0, cw, ch) + "\n"
         tex = tex + r"\end{scope}" + "\n"
 
@@ -288,15 +289,16 @@ class CardTexGenerator(object):
 
         tex = tex + r"\begin{tikzpicture}" + "\n"
         tex = tex + r"[" + "\n"
-        tex = tex + r"border_style/.style  = {{ fill=border_fill  , draw=none         , line width={:.2f}pt    , rounded corners=0.0cm    }},".format(0.0) + "\n"
-        tex = tex + r"card_style/.style    = {{ fill=dmg_back_card_fill , draw=dmg_back_card_line , line width={:.2f}pt , rounded corners={:.2f}cm }},".format(line_width, size["card_round"]) + "\n"
+        # tex = tex + r"border_style/.style  = {{ fill=border_fill  , draw=none         , line width={:.2f}pt    , rounded corners=0.0cm    }},".format(0.0) + "\n"
+        tex = tex + r"border_style/.style  = {{ fill=dmg_back_card_fill  , draw=dmg_back_card_fill         , line width={:.2f}pt    , rounded corners=0.0cm    }},".format(0.0) + "\n"
+        tex = tex + r"card_style/.style    = {{ fill=dmg_back_card_fill , draw=none , line width={:.2f}pt , rounded corners={:.2f}cm }},".format(line_width, size["card_round"]) + "\n"
         tex = tex + r"circle_style/.style  = {{ fill=dmg_back_card_fill!60!black , draw=dmg_back_card_line , line width={:.2f}pt }},".format(line_width) + "\n"
         tex = tex + r"hitbox_style/.style  = {{ rectangle , inner sep=0.0cm , align=center , fill=none , draw=none, line width={:.2f}pt }}".format(0.0) + "\n"
         tex = tex + r"]" + "\n"
 
         border_thick = size["border_thick"]
         tex = tex + r"\begin{scope}" + "\n"
-        # tex = tex + self.tikzRectangle("border_style", 0-border_thick, 0-border_thick, cw+border_thick, ch+border_thick) + "\n"
+        tex = tex + self.tikzRectangle("border_style", 0-border_thick, 0-border_thick, cw+border_thick, ch+border_thick) + "\n"
         tex = tex + self.tikzRectangle("card_style", 0, 0, cw, ch) + "\n"
         tex = tex + r"\end{scope}" + "\n"
 
