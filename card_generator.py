@@ -68,8 +68,9 @@ class CardTexGenerator(object):
         texRow = ""
         texBackRow = ""
         for card in self.cardToProcess:
-            texCard = self.cardTex(card)
-            texCardBack = self.cardBackTex(card)
+            texTuple = self.cardTex(card)
+            texCard = texTuple[0]
+            texCardBack = texTuple[1]
 
             texRow = texRow + texCard
             texBackRow = texCardBack + texBackRow
@@ -96,28 +97,21 @@ class CardTexGenerator(object):
         self.print_debug("processCards done")
 
     def cardTex (self, card):
-        tex = ""
+        texCard = "% CARD BEGIN\n% TYPE: " + card["type"] + "\n% NAME: " + card["name"] + "\n"
+        texCardBack = "% CARD BACK BEGIN\n% TYPE: " + card["type"] + "\n% NAME: " + card["name"] + "\n"
         type = card["type"]
         if type == "damage":
-            tex = self.cardDamageTex(card)
+            texCard = texCard + self.cardDamageTex(card)
+            texCardBack = texCardBack + self.cardBackDamageTex(card)
         # elif x == 'b':
         else:
             print("Card not found!")
-            # print(card)
+            return ("","")
+        texCard = "\n" + texCard + "% CARD END\n% TYPE: " + card["type"] + "\n% NAME: " + card["name"]
+        texCardBack = "\n" + texCardBack + "% CARD BACK END\n% TYPE: " + card["type"] + "\n% NAME: " + card["name"]
+        tex = (texCard, texCardBack)
         return tex
         self.print_debug("cardTex done")
-
-    def cardBackTex (self, card):
-        tex = ""
-        type = card["type"]
-        if type == "damage":
-            tex = self.cardBackDamageTex(card)
-        # elif x == 'b':
-        else:
-            print("Card not found!")
-            # print(card)
-        return tex
-        self.print_debug("cardBackTex done")
 
     def tikzCommand (self, style):
         if style == "clip":
