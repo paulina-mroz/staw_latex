@@ -17,15 +17,15 @@
       "card_line"    : "000000",
       "card_fill"    : "000000",
       "panel_line"   : "000000",
-      "panel_fill"   : "777788",
+      "panel_fill"   : "9999AA",
       "textbox_line" : "000000",
-      "textbox_fill" : "FFFFDD",
+      "textbox_fill" : "FFFFE0",
       "textbox_font" : "000000",
       "title_fill"   : "000000",
       "title_font"   : "FFFFFF",
 
       "dmg_back_card_line" : "000000",
-      "dmg_back_card_fill" : "777788"
+      "dmg_back_card_fill" : "9999AA"
     },
     "white_and_color": {
       "border_fill"  : "FF5500",

@@ -307,7 +307,7 @@ class CardTexGenerator(object):
         back_hit = back_hit + r"\begin{tikzpicture}" + "\n"
         back_hit = back_hit + r"[" + "\n"
         # back_hit = back_hit + r"hit_style/.style = {{ inner color=black , outer color=border_fill!70!black , draw=dmg_back_card_fill!60!black , line width={:.2f}pt , rounded corners=0.0cm }}".format(line_width, size["card_round"])
-        back_hit = back_hit + r"hit_style/.style = {{ inner color=black , outer color=border_fill!70!black , draw=none , line width={:.2f}pt , rounded corners=0.0cm }}".format(0.0, size["card_round"])
+        back_hit = back_hit + r"hit_style/.style = {{ inner color=black , outer color=border_fill!85!black , draw=none , line width={:.2f}pt , rounded corners=0.0cm }}".format(0.0, size["card_round"])
         back_hit = back_hit + r"]" + "\n"
         back_hit = back_hit + self.tikzDamageBackHit("hit_style") + "\n"
         back_hit = back_hit + r"\end{tikzpicture}"
