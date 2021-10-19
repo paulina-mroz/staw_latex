@@ -1,4 +1,5 @@
 import json
+from tikz_commands import *
 
 class CardTexGenerator(object):
     """docstring for CardTexGenerator."""
@@ -116,50 +117,6 @@ class CardTexGenerator(object):
         return tex
         self.print_debug("cardTex done")
 
-    def tikzCommand (self, style):
-        if style == "clip":
-            prefix = r"\clip"
-        elif style == "":
-            prefix = r"\draw"
-        else:
-            prefix = r"\draw [{:s}]".format(style)
-        return prefix
-
-    def tikzRectangle (self, style, x1, y1, x2, y2):
-        prefix = self.tikzCommand(style)
-        command = r"{:s} ({:.2f}cm,{:.2f}cm) rectangle ({:.2f}cm,{:.2f}cm);".format(prefix, x1, y1, x2, y2)
-        return command
-
-    def tikzCShape (self, style, x1, y1, x2, y2, title_thick, thick):
-        ix1 = x1 + thick
-        iy1 = y1 + thick
-        iy2 = y2 - title_thick
-        prefix = self.tikzCommand(style)
-
-        command = ""
-        command = command + prefix + "\n"
-        command = command + r"({:.2f}cm,{:.2f}cm) [rounded corners={}cm] --".format(  x2 ,  y1 , thick)         + "\n"
-        command = command + r"({:.2f}cm,{:.2f}cm) [rounded corners={}cm] --".format(  x1 ,  y1 , thick)         + "\n"
-        command = command + r"({:.2f}cm,{:.2f}cm) [rounded corners={}cm] --".format(  x1 ,  y2 , title_thick/2) + "\n"
-        command = command + r"({:.2f}cm,{:.2f}cm) [rounded corners={}cm] --".format(  x2 ,  y2 , title_thick/2) + "\n"
-        command = command + r"({:.2f}cm,{:.2f}cm) [rounded corners={}cm] --".format(  x2 , iy2 , thick/2)       + "\n"
-        command = command + r"({:.2f}cm,{:.2f}cm) [rounded corners={}cm] --".format( ix1 , iy2 , thick/2)       + "\n"
-        command = command + r"({:.2f}cm,{:.2f}cm) [rounded corners={}cm] --".format( ix1 , iy1 , thick/2)       + "\n"
-        command = command + r"({:.2f}cm,{:.2f}cm) [rounded corners={}cm] --".format(  x2 , iy1 , thick/2)       + "\n"
-        command = command + r"cycle;"
-        return command
-
-    def tikzResizedTextNode(self, style, x, y, scale_x, scale_y, resize_height, text):
-        command = r"\node [{:s}] () at ({:.2f}cm,{:.2f}cm) ".format(style, x, y)
-        command = command +  r"{{\scalebox{{ {:.2f} }}[ {:.2f} ]{{\resizebox{{!}}{{ {:.2f}cm }}".format(scale_x, scale_y, resize_height)
-        command = command +  r"{{{:s}}} }} }};".format(text)
-        return command
-
-    def tikzTextNode(self, style, x, y, text):
-        command = r"\node [{:s}] () at ({:.2f}cm,{:.2f}cm) ".format(style, x, y)
-        command = command +  r"{{{:s}}};".format(text)
-        return command
-
     def cardDamageTex (self, card, size):
         tex = ""
 
@@ -184,8 +141,8 @@ class CardTexGenerator(object):
 
         border_thick = size["border_thick"]
         tex = tex + r"\begin{scope}" + "\n"
-        tex = tex + self.tikzRectangle("border_style", 0-border_thick, 0-border_thick, cw+border_thick, ch+border_thick) + "\n"
-        tex = tex + self.tikzRectangle("card_style", 0, 0, cw, ch) + "\n"
+        tex = tex + tikzRectangle("border_style", 0-border_thick, 0-border_thick, cw+border_thick, ch+border_thick) + "\n"
+        tex = tex + tikzRectangle("card_style", 0, 0, cw, ch) + "\n"
         tex = tex + r"\end{scope}" + "\n"
 
         title_height = size["title_height"]
@@ -196,20 +153,20 @@ class CardTexGenerator(object):
         panel_outer_y1 = 0 + panel_gap
         panel_outer_y2 = ch - panel_gap
         tex = tex + r"\begin{scope}" + "\n"
-        tex = tex + self.tikzCShape("clip"            , panel_outer_x1, panel_outer_y1, panel_outer_x2, panel_outer_y2, title_height, panel_thick) + "\n"
-        tex = tex + self.tikzCShape("panel_fill_style", panel_outer_x1, panel_outer_y1, panel_outer_x2, panel_outer_y2, title_height, panel_thick) + "\n"
+        tex = tex + tikzCShape("clip"            , panel_outer_x1, panel_outer_y1, panel_outer_x2, panel_outer_y2, title_height, panel_thick) + "\n"
+        tex = tex + tikzCShape("panel_fill_style", panel_outer_x1, panel_outer_y1, panel_outer_x2, panel_outer_y2, title_height, panel_thick) + "\n"
         panel_line1_x1 = panel_outer_x1+1.2*panel_thick
         panel_line2_y2 = panel_outer_y2-1.2*title_height
         panel_line3_x1 = panel_outer_x2-1.2*panel_thick
         panel_line_thick = 0.05
-        tex = tex + self.tikzRectangle("panel_lines_style", panel_line1_x1, 0, panel_line1_x1+panel_line_thick, ch) + "\n"
-        tex = tex + self.tikzRectangle("panel_lines_style", 0, panel_line2_y2-panel_line_thick, cw, panel_line2_y2) + "\n"
-        tex = tex + self.tikzRectangle("panel_lines_style", panel_line3_x1-panel_line_thick, 0, panel_line3_x1, ch/2) + "\n"
-        tex = tex + self.tikzResizedTextNode("title_style", cw/2 + 0.05, panel_outer_y2 - title_height/2, 0.35, 1.0, title_height - 0.1, card["name"].upper()) + "\n"
-        tex = tex + self.tikzTextNode("id_number_style", panel_line3_x1+((panel_outer_x2-panel_line3_x1)/2), panel_outer_y1+panel_thick/2, card["id"]) + "\n"
+        tex = tex + tikzRectangle("panel_lines_style", panel_line1_x1, 0, panel_line1_x1+panel_line_thick, ch) + "\n"
+        tex = tex + tikzRectangle("panel_lines_style", 0, panel_line2_y2-panel_line_thick, cw, panel_line2_y2) + "\n"
+        tex = tex + tikzRectangle("panel_lines_style", panel_line3_x1-panel_line_thick, 0, panel_line3_x1, ch/2) + "\n"
+        tex = tex + tikzResizedTextNode("title_style", cw/2 + 0.05, panel_outer_y2 - title_height/2, 0.35, 1.0, title_height - 0.1, card["name"].upper()) + "\n"
+        tex = tex + tikzTextNode("id_number_style", panel_line3_x1+((panel_outer_x2-panel_line3_x1)/2), panel_outer_y1+panel_thick/2, card["id"]) + "\n"
         tex = tex + r"\end{scope}" + "\n"
         tex = tex + r"\begin{scope}" + "\n"
-        tex = tex + self.tikzCShape("panel_line_style", panel_outer_x1, panel_outer_y1, panel_outer_x2, panel_outer_y2, title_height, panel_thick) + "\n"
+        tex = tex + tikzCShape("panel_line_style", panel_outer_x1, panel_outer_y1, panel_outer_x2, panel_outer_y2, title_height, panel_thick) + "\n"
         tex = tex + r"\end{scope}" + "\n"
 
         textbox_gap = size["textbox_gap"]
@@ -218,7 +175,7 @@ class CardTexGenerator(object):
         textbox_x2 = cw - panel_gap - textbox_gap
         textbox_y2 = panel_outer_y2 - title_height - textbox_gap
         tex = tex + r"\begin{scope}" + "\n"
-        tex = tex + self.tikzRectangle("textbox_style", textbox_x1, textbox_y1, textbox_x2, textbox_y2) + "\n"
+        tex = tex + tikzRectangle("textbox_style", textbox_x1, textbox_y1, textbox_x2, textbox_y2) + "\n"
 
         card_text_from_json = card["text"]
         card_text_tmp = card_text_from_json.replace("\n\n", "\n\n\\vspace{1em}\n")
@@ -229,57 +186,12 @@ class CardTexGenerator(object):
         card_text_tmp = card_text_tmp.replace("[turn-right]", "\inlinegraphics{../pics_vector/turn-right.pdf}")
         card_text_tmp = card_text_tmp.replace("[weapon]", "\inlinegraphics{../pics_vector/weapon.pdf}")
         card_text = card_text_tmp.replace("ACTION:", "\\textbf{ACTION:}")
-        # tex = tex + self.tikzTextNode("text_style, text width={:.2f}cm".format(textbox_x2-textbox_x1-0.1), textbox_x1+((textbox_x2-textbox_x1)/2), textbox_y2-size["textbox_round"], card_text) + "\n"
-        tex = tex + self.tikzTextNode("text_style, text width={:.2f}cm".format(textbox_x2-textbox_x1-0.2), textbox_x1+((textbox_x2-textbox_x1)/2), textbox_y2-((textbox_y2-textbox_y1)/2), card_text) + "\n"
+        # tex = tex + tikzTextNode("text_style, text width={:.2f}cm".format(textbox_x2-textbox_x1-0.1), textbox_x1+((textbox_x2-textbox_x1)/2), textbox_y2-size["textbox_round"], card_text) + "\n"
+        tex = tex + tikzTextNode("text_style, text width={:.2f}cm".format(textbox_x2-textbox_x1-0.2), textbox_x1+((textbox_x2-textbox_x1)/2), textbox_y2-((textbox_y2-textbox_y1)/2), card_text) + "\n"
         tex = tex + r"\end{scope}" + "\n"
 
         tex = tex + r"\end{tikzpicture}" + "\n"
         return tex
-
-    def tikzDamageBackHit (self, style):
-        prefix = self.tikzCommand(style)
-        command = ""
-        command = command + prefix + "\n"
-        command = command + """ (36.42225pt, -198.5916pt) -- (36.42225pt, -198.5916pt)
-         -- (36.42225pt, -198.5916pt)
-         -- (51.66899pt, -193.2883pt)
-         -- (51.66899pt, -193.2883pt)
-         -- (54.7941pt, -190.8261pt)
-         -- (54.7941pt, -190.8261pt)
-         -- (60.57082pt, -180.9773pt)
-         -- (60.57082pt, -180.9773pt)
-         -- (62.08601pt, -172.4542pt)
-         -- (62.08601pt, -172.4542pt)
-         -- (64.54823pt, -185.0494pt)
-         -- (64.54823pt, -185.0494pt)
-         -- (66.63163pt, -189.2162pt)
-         -- (66.63163pt, -189.2162pt)
-         -- (75.43875pt, -195.4664pt)
-         -- (75.43875pt, -195.4664pt)
-         -- (85.47698pt, -198.2127pt)
-         -- (85.47698pt, -198.2127pt)
-         -- (75.72285pt, -200.5802pt)
-         -- (75.72285pt, -200.5802pt)
-         -- (68.52563pt, -205.3152pt)
-         -- (68.52563pt, -205.3152pt)
-         -- (62.65422pt, -215.4481pt)
-         -- (62.65422pt, -215.4481pt)
-         -- (61.32841pt, -223.9712pt)
-         -- (61.32841pt, -223.9712pt)
-         -- (58.7715pt, -213.0806pt)
-         -- (58.7715pt, -213.0806pt)
-         -- (54.88879pt, -205.2205pt)
-         -- (54.88879pt, -205.2205pt)
-         -- (50.53258pt, -202.5689pt)
-         -- (50.53258pt, -202.5689pt)
-         -- (44.18766pt, -199.8226pt) -- cycle
-        ;"""
-        return command
-
-    def tikzCircle (self, style, x, y, r):
-        prefix = self.tikzCommand(style)
-        command = r"{:s} ({:.2f}cm,{:.2f}cm) circle ({:.2f}cm);".format(prefix, x, y, r)
-        return command
 
     def cardBackDamageTex (self, card, size):
         tex = ""
@@ -299,8 +211,8 @@ class CardTexGenerator(object):
 
         border_thick = size["border_thick"]
         tex = tex + r"\begin{scope}" + "\n"
-        tex = tex + self.tikzRectangle("border_style", 0-border_thick, 0-border_thick, cw+border_thick, ch+border_thick) + "\n"
-        tex = tex + self.tikzRectangle("card_style", 0, 0, cw, ch) + "\n"
+        tex = tex + tikzRectangle("border_style", 0-border_thick, 0-border_thick, cw+border_thick, ch+border_thick) + "\n"
+        tex = tex + tikzRectangle("card_style", 0, 0, cw, ch) + "\n"
         tex = tex + r"\end{scope}" + "\n"
 
         tex = tex + r"\begin{scope}" + "\n"
@@ -310,25 +222,25 @@ class CardTexGenerator(object):
         # back_hit = back_hit + r"hit_style/.style = {{ inner color=black , outer color=border_fill!70!black , draw=dmg_back_card_fill!60!black , line width={:.2f}pt , rounded corners=0.0cm }}".format(line_width, size["card_round"])
         back_hit = back_hit + r"hit_style/.style = {{ inner color=black , outer color=border_fill!85!black , draw=none , line width={:.2f}pt , rounded corners=0.0cm }}".format(0.0, size["card_round"])
         back_hit = back_hit + r"]" + "\n"
-        back_hit = back_hit + self.tikzDamageBackHit("hit_style") + "\n"
+        back_hit = back_hit + tikzDamageBackHit("hit_style") + "\n"
         back_hit = back_hit + r"\end{tikzpicture}"
         back_hit = back_hit + "}" + "\n"
-        tex = tex + self.tikzTextNode("hitbox_style", cw/2, ch/2, back_hit) + "\n"
+        tex = tex + tikzTextNode("hitbox_style", cw/2, ch/2, back_hit) + "\n"
         tex = tex + r"\end{scope}" + "\n"
 
         circle_r = 0.1
         circle_gap = 3*circle_r
         tex = tex + r"\begin{scope}" + "\n"
-        tex = tex + self.tikzCircle("circle_style", 0+circle_gap, 0+circle_gap, circle_r) + "\n"
-        tex = tex + self.tikzCircle("circle_style", 0+circle_gap, ch/4+0.5*circle_gap, circle_r) + "\n"
-        tex = tex + self.tikzCircle("circle_style", 0+circle_gap, ch/2, circle_r) + "\n"
-        tex = tex + self.tikzCircle("circle_style", 0+circle_gap, ch*3/4-0.5*circle_gap, circle_r) + "\n"
-        tex = tex + self.tikzCircle("circle_style", 0+circle_gap, ch-circle_gap, circle_r) + "\n"
-        tex = tex + self.tikzCircle("circle_style", cw-circle_gap, 0+circle_gap, circle_r) + "\n"
-        tex = tex + self.tikzCircle("circle_style", cw-circle_gap, ch/4+0.5*circle_gap, circle_r) + "\n"
-        tex = tex + self.tikzCircle("circle_style", cw-circle_gap, ch/2, circle_r) + "\n"
-        tex = tex + self.tikzCircle("circle_style", cw-circle_gap, ch*3/4-0.5*circle_gap, circle_r) + "\n"
-        tex = tex + self.tikzCircle("circle_style", cw-circle_gap, ch-circle_gap, circle_r) + "\n"
+        tex = tex + tikzCircle("circle_style", 0+circle_gap, 0+circle_gap, circle_r) + "\n"
+        tex = tex + tikzCircle("circle_style", 0+circle_gap, ch/4+0.5*circle_gap, circle_r) + "\n"
+        tex = tex + tikzCircle("circle_style", 0+circle_gap, ch/2, circle_r) + "\n"
+        tex = tex + tikzCircle("circle_style", 0+circle_gap, ch*3/4-0.5*circle_gap, circle_r) + "\n"
+        tex = tex + tikzCircle("circle_style", 0+circle_gap, ch-circle_gap, circle_r) + "\n"
+        tex = tex + tikzCircle("circle_style", cw-circle_gap, 0+circle_gap, circle_r) + "\n"
+        tex = tex + tikzCircle("circle_style", cw-circle_gap, ch/4+0.5*circle_gap, circle_r) + "\n"
+        tex = tex + tikzCircle("circle_style", cw-circle_gap, ch/2, circle_r) + "\n"
+        tex = tex + tikzCircle("circle_style", cw-circle_gap, ch*3/4-0.5*circle_gap, circle_r) + "\n"
+        tex = tex + tikzCircle("circle_style", cw-circle_gap, ch-circle_gap, circle_r) + "\n"
         tex = tex + r"\end{scope}" + "\n"
 
         tex = tex + r"\end{tikzpicture}" + "\n"
