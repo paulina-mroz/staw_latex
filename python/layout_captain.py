@@ -18,8 +18,8 @@ def cardCaptainTex (card, size):
     tex = tex + r"panel_fill_style/.style = {{ fill=panel_fill , draw=none       , line width={:.2f}pt }},".format(0.0) + "\n"
     tex = tex + r"panel_line_style/.style = {{ fill=none       , draw=panel_line , line width={:.2f}pt }},".format(line_width) + "\n"
     tex = tex + r"title_style/.style  = { rectangle , inner sep=0.05cm, minimum height = 1cm, fill=title_fill , draw=none , text=title_font , line width=0.0pt , font=\scshape\bfseries }," + "\n"
-    tex = tex + r"text_style/.style  =  { rectangle , inner sep=0.05cm , align=center , fill=none , draw=none , text=black , font=\scriptsize }," + "\n"
-    tex = tex + r"id_number_style/.style  =  { rectangle , inner sep=0.05cm , align=center , fill=none , draw=none , text=panel_line , font=\tiny\bfseries }" + "\n"
+    tex = tex + r"text_style/.style  =  { rectangle , inner sep=0.05cm , align=left, below , fill=none , draw=none , text=black , font=\scriptsize }" + "\n"
+    # tex = tex + r"id_number_style/.style  =  { rectangle , inner sep=0.05cm , align=center , fill=none , draw=none , text=panel_line , font=\tiny\bfseries }" + "\n"
     # tex = tex + r"text_style/.style  =  { rectangle , inner sep=0.05cm, below , align=center , fill=none , draw=none , text=black , font=\scriptsize }" + "\n"
     tex = tex + r"]" + "\n"
 
@@ -56,7 +56,7 @@ def cardCaptainTex (card, size):
     panel_line2_y2 = panel_outer_y2-1.2*title_height
     panel_line3_x1 = panel_outer_x2-1.2*panel_thick
     panel_line_thick = 0.05
-    tex = tex + tikzRectangle("panel_lines_style", panel_line1_x1, 0, panel_line1_x1+panel_line_thick, ch) + "\n"
+    # tex = tex + tikzRectangle("panel_lines_style", panel_line1_x1, 0, panel_line1_x1+panel_line_thick, ch) + "\n"
     tex = tex + tikzRectangle("panel_lines_style", 0, panel_line2_y2-panel_line_thick, cw, panel_line2_y2) + "\n"
     tex = tex + tikzResizedTextNode("title_style", cw/2 + 0.05, panel_outer_y2 - title_height/2, 0.35, 1.0, title_height - 0.1, card["name"].upper()) + "\n"
     tex = tex + r"\end{scope}" + "\n"
@@ -72,18 +72,10 @@ def cardCaptainTex (card, size):
     tex = tex + r"\begin{scope}" + "\n"
     tex = tex + tikzRectangle("textbox_style", textbox_x1, textbox_y1, textbox_x2, textbox_y2) + "\n"
 
-    card_text_from_json = card["text"]
-    card_text_tmp = card_text_from_json.replace("\n\n", "\n\n\\vspace{1em}\n")
-    card_text_tmp = card_text_tmp.replace("[hit]", "\inlinegraphics{../pics_vector/hit.pdf}")
-    card_text_tmp = card_text_tmp.replace("[crit]", "\inlinegraphics{../pics_vector/crit.pdf}")
-    card_text_tmp = card_text_tmp.replace("[talent]", "\inlinegraphics{../pics_vector/talent.pdf}")
-    card_text_tmp = card_text_tmp.replace("[turn-left]", "\inlinegraphics{../pics_vector/turn-left.pdf}")
-    card_text_tmp = card_text_tmp.replace("[turn-right]", "\inlinegraphics{../pics_vector/turn-right.pdf}")
-    card_text_tmp = card_text_tmp.replace("[weapon]", "\inlinegraphics{../pics_vector/weapon.pdf}")
-    card_text = card_text_tmp.replace("ACTION:", "\\textbf{ACTION:}")
-    # tex = tex + tikzTextNode("text_style, text width={:.2f}cm".format(textbox_x2-textbox_x1-0.1), textbox_x1+((textbox_x2-textbox_x1)/2), textbox_y2-size["textbox_round"], card_text) + "\n"
-    tex = tex + tikzTextNode("text_style, text width={:.2f}cm".format(textbox_x2-textbox_x1-0.2), textbox_x1+((textbox_x2-textbox_x1)/2), textbox_y2-((textbox_y2-textbox_y1)/2), card_text) + "\n"
+    card_text = tikzTextReplace(card["text"])
+    tex = tex + tikzTextNode("text_style, text width={:.2f}cm".format(textbox_x2-textbox_x1-0.2), textbox_x1+((textbox_x2-textbox_x1)/2), textbox_y2-textbox_gap, card_text) + "\n"
     tex = tex + r"\end{scope}" + "\n"
 
     tex = tex + r"\end{tikzpicture}" + "\n"
+    # \setlength{\intextsep}{0pt}\setlength{\columnsep}{0pt}\begin{wrapfigure}[3]{r}{1cm}\end{wrapfigure}
     return tex

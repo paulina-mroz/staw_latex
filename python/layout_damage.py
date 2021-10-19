@@ -60,15 +60,7 @@ def cardDamageTex (card, size):
     tex = tex + r"\begin{scope}" + "\n"
     tex = tex + tikzRectangle("textbox_style", textbox_x1, textbox_y1, textbox_x2, textbox_y2) + "\n"
 
-    card_text_from_json = card["text"]
-    card_text_tmp = card_text_from_json.replace("\n\n", "\n\n\\vspace{1em}\n")
-    card_text_tmp = card_text_tmp.replace("[hit]", "\inlinegraphics{../pics_vector/hit.pdf}")
-    card_text_tmp = card_text_tmp.replace("[crit]", "\inlinegraphics{../pics_vector/crit.pdf}")
-    card_text_tmp = card_text_tmp.replace("[talent]", "\inlinegraphics{../pics_vector/talent.pdf}")
-    card_text_tmp = card_text_tmp.replace("[turn-left]", "\inlinegraphics{../pics_vector/turn-left.pdf}")
-    card_text_tmp = card_text_tmp.replace("[turn-right]", "\inlinegraphics{../pics_vector/turn-right.pdf}")
-    card_text_tmp = card_text_tmp.replace("[weapon]", "\inlinegraphics{../pics_vector/weapon.pdf}")
-    card_text = card_text_tmp.replace("ACTION:", "\\textbf{ACTION:}")
+    card_text = tikzTextReplace(card["text"])
     # tex = tex + tikzTextNode("text_style, text width={:.2f}cm".format(textbox_x2-textbox_x1-0.1), textbox_x1+((textbox_x2-textbox_x1)/2), textbox_y2-size["textbox_round"], card_text) + "\n"
     tex = tex + tikzTextNode("text_style, text width={:.2f}cm".format(textbox_x2-textbox_x1-0.2), textbox_x1+((textbox_x2-textbox_x1)/2), textbox_y2-((textbox_y2-textbox_y1)/2), card_text) + "\n"
     tex = tex + r"\end{scope}" + "\n"

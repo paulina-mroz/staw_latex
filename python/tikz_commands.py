@@ -1,3 +1,5 @@
+import re
+
 def tikzCommand (style):
     if style == "clip":
         prefix = r"\clip"
@@ -86,3 +88,27 @@ def tikzCircle (style, x, y, r):
     prefix = tikzCommand(style)
     command = r"{:s} ({:.2f}cm,{:.2f}cm) circle ({:.2f}cm);".format(prefix, x, y, r)
     return command
+
+def tikzTextReplace (text):
+    rules_fixed = [
+        ("\n\n"        , "\n\n\\vspace{1em}\n"                           ),
+        ("[hit]"       , "\inlinegraphics{../pics_vector/hit.pdf}"       ),
+        ("[crit]"      , "\inlinegraphics{../pics_vector/crit.pdf}"      ),
+        ("[talent]"    , "\inlinegraphics{../pics_vector/talent.pdf}"    ),
+        ("[turn-left]" , "\inlinegraphics{../pics_vector/turn-left.pdf}" ),
+        ("[turn-right]", "\inlinegraphics{../pics_vector/turn-right.pdf}"),
+        ("[weapon]"    , "\inlinegraphics{../pics_vector/weapon.pdf}"    ),
+        ("<b>"         , "\\textbf{"                                     ),
+        ("</b>"        , "}"                                             )
+        ]
+    # ("ACTION:"     , "\\textbf{ACTION:}"),
+    rules_regex = [
+        ("\\n-+\\n"    , r"\n\n\\raisedrule[0.4em]{0.7pt}\n\n" )
+        ]
+    text_replaced = text
+    for rule in rules_fixed:
+        text_replaced = text_replaced.replace(rule[0],rule[1])
+    for rule in rules_regex:
+        text_replaced = re.sub(rule[0],rule[1], text_replaced)
+
+    return text_replaced
