@@ -12,7 +12,7 @@ class CardTexGenerator(object):
         self.cardParams = {}
         self.cardToProcess = {}
         # self.jsonFile = 'data.json'
-        # self.jsonFile = 'test.json'
+        # self.jsonFile = 'json/test.json'
         self.jsonFile = 'json/damage_deck.json'
         self.jsonParams = 'json/card_style_parameters.json'
         self.outputTexFile = 'tex/cards.tex'
@@ -51,7 +51,7 @@ class CardTexGenerator(object):
         self.print_debug("customColors done")
 
     def listCardsToProcess (self):
-        self.cardToProcess = self.data["damages"]
+        self.cardToProcess = sum(self.data.values(), [])
         self.print_debug("listCardsToProcess done")
 
     def processCards (self):
@@ -101,9 +101,12 @@ class CardTexGenerator(object):
         texCardBack = "% CARD BACK BEGIN\n% TYPE: " + card["type"] + "\n% NAME: " + card["name"] + "\n"
         type = card["type"]
         if type == "damage":
-            texCard = texCard + self.cardDamageTex(card)
-            texCardBack = texCardBack + self.cardBackDamageTex(card)
-        # elif x == 'b':
+            size = self.cardParams["sizes"][card["type"]]
+            texCard = texCard + self.cardDamageTex(card, size)
+            texCardBack = texCardBack + self.cardBackDamageTex(card, size)
+        elif type == 'captain':
+            texCard = texCard + self.cardCaptainTex(card)
+            # texCardBack = texCardBack + self.cardBackDamageTex(card)
         else:
             print("Card not found!")
             return ("","")
@@ -157,9 +160,8 @@ class CardTexGenerator(object):
         command = command +  r"{{{:s}}};".format(text)
         return command
 
-    def cardDamageTex (self, card):
+    def cardDamageTex (self, card, size):
         tex = ""
-        size = self.cardParams["sizes"][card["type"]]["mini"]
 
         line_width = size["line_width"]
         cw = size["card_width"]
@@ -279,9 +281,8 @@ class CardTexGenerator(object):
         command = r"{:s} ({:.2f}cm,{:.2f}cm) circle ({:.2f}cm);".format(prefix, x, y, r)
         return command
 
-    def cardBackDamageTex (self, card):
+    def cardBackDamageTex (self, card, size):
         tex = ""
-        size = self.cardParams["sizes"][card["type"]]["mini"]
 
         line_width = size["line_width"]
         cw = size["card_width"]

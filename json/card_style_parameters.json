@@ -42,22 +42,36 @@
   },
   "sizes" : {
     "damage": {
-      "mini": {
-        "line_width"        : 0.5,
+      "line_width"        : 0.5,
 
-        "border_thick"      : 0.1,
-        "card_width"        : 4.2,
-        "card_height"       : 6.4,
-        "card_round"        : 0.23,
+      "border_thick"      : 0.1,
+      "card_width"        : 4.2,
+      "card_height"       : 6.4,
+      "card_round"        : 0.23,
 
-        "title_height"      : 0.5,
+      "title_height"      : 0.5,
 
-        "panel_gap"         : 0.15,
-        "panel_thick"       : 0.3,
+      "panel_gap"         : 0.15,
+      "panel_thick"       : 0.3,
 
-        "textbox_gap"       : 0.1,
-        "textbox_round"     : 0.3
-      }
+      "textbox_gap"       : 0.1,
+      "textbox_round"     : 0.3
+    },
+    "captain": {
+      "line_width"        : 0.5,
+
+      "border_thick"      : 0.1,
+      "card_width"        : 6.3,
+      "card_height"       : 8.9,
+      "card_round"        : 0.25,
+
+      "title_height"      : 0.5,
+
+      "panel_gap"         : 0.15,
+      "panel_thick"       : 0.3,
+
+      "textbox_gap"       : 0.1,
+      "textbox_round"     : 0.3
     }
   }
 }
