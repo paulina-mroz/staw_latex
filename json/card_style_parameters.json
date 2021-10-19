@@ -10,7 +10,8 @@
       "textbox_fill" : "FFFFFF",
       "textbox_font" : "000000",
       "title_fill"   : "004422",
-      "title_font"   : "FFFFFF"
+      "title_font"   : "FFFFFF",
+      "cost_font"    : "FFFF00"
     },
     "black_and_color": {
       "border_fill"  : "FF5500",
