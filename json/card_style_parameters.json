@@ -65,13 +65,15 @@
       "card_height"       : 8.9,
       "card_round"        : 0.25,
 
-      "title_height"      : 0.5,
+      "title_height"      : 0.6,
 
-      "panel_gap"         : 0.15,
-      "panel_thick"       : 0.3,
+      "panel_gap"         : 0.25,
+      "panel_thick"       : 0.4,
 
       "textbox_gap"       : 0.1,
-      "textbox_round"     : 0.3
+      "textbox_round"     : 0.3,
+
+      "picture_height"    : 3.5
     }
   }
 }

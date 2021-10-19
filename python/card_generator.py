@@ -1,5 +1,6 @@
 import json
 from layout_damage import *
+from layout_captain import *
 
 class CardTexGenerator(object):
     """docstring for CardTexGenerator."""
@@ -13,13 +14,13 @@ class CardTexGenerator(object):
         self.cardParams = {}
         self.cardToProcess = {}
         # self.jsonFile = 'data.json'
-        # self.jsonFile = 'json/test.json'
-        self.jsonFile = 'json/damage_deck.json'
+        self.jsonFile = 'json/test.json'
+        # self.jsonFile = 'json/damage_deck.json'
         self.jsonParams = 'json/card_style_parameters.json'
         self.outputTexFile = 'tex/cards.tex'
 
-        # self.colorTheme = "test_color"
-        self.colorTheme = "black_and_color"
+        self.colorTheme = "test_color"
+        # self.colorTheme = "black_and_color"
         # self.colorTheme = "white_and_color"
         self.ifIncludePictures = True
         self.ifIncludeFrame = True
@@ -58,8 +59,8 @@ class CardTexGenerator(object):
     def processCards (self):
         currRow = 0
         currCol = 0
-        limitRow = 4
-        limitCol = 4
+        limitRow = 3
+        limitCol = 3
         texAll = ""
         texAllTmp = ""
         texPage = ""
@@ -106,8 +107,10 @@ class CardTexGenerator(object):
             texCard = texCard + cardDamageTex(card, size)
             texCardBack = texCardBack + cardBackDamageTex(card, size)
         elif type == 'captain':
-            texCard = texCard + self.cardCaptainTex(card)
-            # texCardBack = texCardBack + self.cardBackDamageTex(card)
+            size = self.cardParams["sizes"][card["type"]]
+            texCard = texCard + cardCaptainTex(card, size)
+            texCardBack = ""
+            # texCardBack = texCardBack + cardBackDamageTex(card)
         else:
             print("Card not found!")
             return ("","")
