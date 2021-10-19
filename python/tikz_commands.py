@@ -89,6 +89,10 @@ def tikzCircle (style, x, y, r):
     command = r"{:s} ({:.2f}cm,{:.2f}cm) circle ({:.2f}cm);".format(prefix, x, y, r)
     return command
 
+def tikzExternalGraphics (width, graphic):
+    command = "\includegraphics[width={:.2f}cm]{{{:s}}}".format(width, graphic)
+    return command
+
 def tikzTextReplace (text):
     rules_fixed = [
         ("\n\n"        , "\n\n\\vspace{1em}\n"                           ),
