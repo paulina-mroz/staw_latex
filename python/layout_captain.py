@@ -144,7 +144,6 @@ def cardCaptainTex (card, size):
         faction_tex_icons = faction_tex_icons + r"\end{scope}" + "\n"
 
         i = i + 1
-        print(faction)
     tex = tex + r"\begin{scope}" + "\n"
     tex = tex + tikzRectangle("box_outer,  rounded corners={:.2f}cm".format(0.45*cost_height), cost_x1, cost_y1, cost_x2, cost_y2) + "\n"
     tex = tex + faction_tex_outer
@@ -155,6 +154,7 @@ def cardCaptainTex (card, size):
     tex = tex + tikzTextNode("box_text", cost_x1+(cost_x2-cost_x1)*1.1/2, cost_y1+(cost_y2-cost_y1)/2, r"{:d}".format(card["cost"]) ) + "\n"
     tex = tex + r"\end{scope}" + "\n"
     tex = tex + faction_tex_icons
+    cardKeysUsed["factions"] = True
     cardKeysUsed["cost"] = True
 
     card_text = text_wrap + tikzTextReplace(card["text"])
