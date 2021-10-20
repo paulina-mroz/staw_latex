@@ -42,7 +42,7 @@ def cardCaptainTex (card, size):
     tex = tex + tikzRectangle("fill=card_fill", 0-border_thick, 0-border_thick, cw+border_thick, ch+border_thick) + "\n"
     tex = tex + r"\begin{scope}" + "\n"
     tex = tex + tikzRectangle("clip", 0, ch-picture_height+0.01, cw, ch) + "\n"
-    tex = tex + tikzTextNode("picture_style", cw/2, ch, tikzExternalGraphics(cw, "../pics_card/{:s}_{:s}.jpg".format(card["type"], card["id"]))) + "\n"
+    tex = tex + tikzTextNode("picture_style", cw/2, ch, tikzExternalGraphics(cw, 0, "../pics_card/{:s}_{:s}.jpg".format(card["type"], card["id"]))) + "\n"
     tex = tex + r"\end{scope}" + "\n"
     tex = tex + tikzRectangle("fill=card_fill, draw=none, path fading=north", 0-border_thick, ch-picture_height-0.01, cw+border_thick, ch-picture_height+0.3) + "\n"
     tex = tex + r"\end{scope}" + "\n"
@@ -99,7 +99,7 @@ def cardCaptainTex (card, size):
         tex = tex + r"\end{scope}" + "\n"
         tex = tex + r"\begin{scope}" + "\n"
         tex = tex + tikzCircle("clip", unique_x, unique_y, unique_r-items_gap) + "\n"
-        tex = tex + tikzTextNode("text_icon_style", unique_x, unique_y, tikzExternalGraphics(1.4*unique_r, "../pics_vector/unique.pdf" )) + "\n"
+        tex = tex + tikzTextNode("text_icon_style", unique_x, unique_y, tikzExternalGraphics(1.4*unique_r, 1.4*unique_r, "../pics_vector/unique.pdf" )) + "\n"
         tex = tex + r"\end{scope}" + "\n"
     cardKeysUsed["unique"] = True
 
@@ -120,6 +120,42 @@ def cardCaptainTex (card, size):
         text_wrap = r"\setlength{{\intextsep}}{{0pt}}\setlength{{\columnsep}}{{0pt}}\begin{{wrapfigure}}{{r}}{{{:.2f}cm}}\rule{{0pt}}{{{:.2f}cm}}\end{{wrapfigure}}".format(textbox_x2-range_x1,range_y2-range_y1)
     cardKeysUsed["range"] = True
 
+    cost_height = box_height
+    cost_x2 = cw - panel_gap/2
+    cost_x1 = cost_x2 - 1.7*cost_height
+    cost_y1 = panel_outer_y1 - items_gap2
+    cost_y2 = cost_y1 + cost_height
+    faction_x0 = cost_x2 - 1.6*cost_height
+    faction_y0 = cost_y1 + (cost_y2-cost_y1)/2
+    faction_r0 = 0.6*cost_height
+    faction_offset = 0.7*cost_height
+    faction_tex_outer = ""
+    faction_tex_middle = ""
+    faction_tex_inner = ""
+    faction_tex_icons = ""
+    i = 0
+    for faction in reversed(card["factions"]):
+        faction_tex_outer  = faction_tex_outer  + tikzCircle("box_outer", faction_x0-i*faction_offset, faction_y0, faction_r0) + "\n"
+        faction_tex_middle = faction_tex_middle + tikzCircle("box_middle", faction_x0-i*faction_offset, faction_y0, faction_r0-items_gap) + "\n"
+        faction_tex_inner  = faction_tex_inner  + tikzCircle("box_inner", faction_x0-i*faction_offset, faction_y0, faction_r0-items_gap2) + "\n"
+        faction_tex_icons = faction_tex_icons + r"\begin{scope}" + "\n"
+        faction_tex_icons = faction_tex_icons + tikzCircle("clip", faction_x0-i*faction_offset, faction_y0, faction_r0-items_gap2) + "\n"
+        faction_tex_icons = faction_tex_icons + tikzTextNode("text_icon_style", faction_x0-i*faction_offset, faction_y0, tikzExternalGraphics(1.4*(faction_r0-items_gap2), 1.4*(faction_r0-items_gap2), "../pics_vector/faction_{:s}.pdf".format(faction) )) + "\n"
+        faction_tex_icons = faction_tex_icons + r"\end{scope}" + "\n"
+
+        i = i + 1
+        print(faction)
+    tex = tex + r"\begin{scope}" + "\n"
+    tex = tex + tikzRectangle("box_outer,  rounded corners={:.2f}cm".format(0.45*cost_height), cost_x1, cost_y1, cost_x2, cost_y2) + "\n"
+    tex = tex + faction_tex_outer
+    tex = tex + tikzRectangle("box_middle, rounded corners={:.2f}cm".format(0.45*cost_height-items_gap), cost_x1+items_gap, cost_y1+items_gap, cost_x2-items_gap, cost_y2-items_gap) + "\n"
+    tex = tex + faction_tex_middle
+    tex = tex + tikzRectangle("box_inner,  rounded rectangle, rounded rectangle west arc=none, rounded corners={:.2f}cm".format(0.45*cost_height-items_gap2), cost_x1+items_gap2, cost_y1+items_gap2, cost_x2-items_gap2, cost_y2-items_gap2) + "\n"
+    tex = tex + faction_tex_inner
+    tex = tex + tikzTextNode("box_text", cost_x1+(cost_x2-cost_x1)*1.1/2, cost_y1+(cost_y2-cost_y1)/2, r"{:d}".format(card["cost"]) ) + "\n"
+    tex = tex + r"\end{scope}" + "\n"
+    tex = tex + faction_tex_icons
+    cardKeysUsed["cost"] = True
 
     card_text = text_wrap + tikzTextReplace(card["text"])
     tex = tex + tikzTextNode("text_style, text width={:.2f}cm".format(textbox_x2-textbox_x1-0.2), textbox_x1+((textbox_x2-textbox_x1)/2), textbox_y2-textbox_gap, card_text) + "\n"
