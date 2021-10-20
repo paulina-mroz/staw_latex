@@ -2,6 +2,7 @@ from tikz_commands import *
 
 def cardCaptainTex (card, size):
     tex = ""
+    cardKeysUsed = dict.fromkeys(card.keys(),False)
 
     line_width = size["line_width"]
     cw = size["card_width"]
@@ -60,6 +61,7 @@ def cardCaptainTex (card, size):
     title_offset = 0
     if card["unique"]:
         title_offset = 0.15
+    cardKeysUsed["unique"] = True
 
     tex = tex + r"\begin{scope}" + "\n"
     tex = tex + tikzCShape("clip"            , panel_outer_x1, panel_outer_y1, panel_outer_x2, panel_outer_y2, title_height, panel_thick) + "\n"
@@ -75,6 +77,7 @@ def cardCaptainTex (card, size):
     tex = tex + r"\begin{scope}" + "\n"
     tex = tex + tikzCShape("panel_line_style", panel_outer_x1, panel_outer_y1, panel_outer_x2, panel_outer_y2, title_height, panel_thick) + "\n"
     tex = tex + r"\end{scope}" + "\n"
+    cardKeysUsed["name"] = True
 
     textbox_gap = size["textbox_gap"]
     textbox_x1 = panel_outer_x1 + panel_thick + textbox_gap
@@ -98,6 +101,7 @@ def cardCaptainTex (card, size):
         tex = tex + tikzCircle("clip", unique_x, unique_y, unique_r-items_gap) + "\n"
         tex = tex + tikzTextNode("text_icon_style", unique_x, unique_y, tikzExternalGraphics(1.4*unique_r, "../pics_vector/unique.pdf" )) + "\n"
         tex = tex + r"\end{scope}" + "\n"
+    cardKeysUsed["unique"] = True
 
     text_wrap = ""
     box_height = title_height+6*items_gap
@@ -114,11 +118,19 @@ def cardCaptainTex (card, size):
         tex = tex + tikzTextNode("box_text", range_x1+(range_x2-range_x1)/2, range_y1+(range_y2-range_y1)/2, r"{:s}".format(card["range"]) ) + "\n"
         tex = tex + r"\end{scope}" + "\n"
         text_wrap = r"\setlength{{\intextsep}}{{0pt}}\setlength{{\columnsep}}{{0pt}}\begin{{wrapfigure}}{{r}}{{{:.2f}cm}}\rule{{0pt}}{{{:.2f}cm}}\end{{wrapfigure}}".format(textbox_x2-range_x1,range_y2-range_y1)
+    cardKeysUsed["range"] = True
 
 
     card_text = text_wrap + tikzTextReplace(card["text"])
     tex = tex + tikzTextNode("text_style, text width={:.2f}cm".format(textbox_x2-textbox_x1-0.2), textbox_x1+((textbox_x2-textbox_x1)/2), textbox_y2-textbox_gap, card_text) + "\n"
     tex = tex + r"\end{scope}" + "\n"
+    cardKeysUsed["text"] = True
 
     tex = tex + r"\end{tikzpicture}" + "\n"
+
+    cardKeysUsed["id"] = True
+    cardKeysUsed["set"] = True
+    for k in cardKeysUsed:
+        if cardKeysUsed[k]==False:
+            print("WARNING: Property {:20s} not used (in {:10s} {:10s})".format(k, card["type"], card["id"]))
     return tex
