@@ -106,6 +106,7 @@ def tikzTextReplace (text):
         ("</b>"        , "}"                                             )
         ]
     # ("ACTION:"     , "\\textbf{ACTION:}"),
+    # ("\\n-+\\n"    , r"\n\n\\hrulefill\n\n" )
     rules_regex = [
         ("\\n-+\\n"    , r"\n\n\\raisedrule[0.4em]{0.7pt}\n\n" )
         ]

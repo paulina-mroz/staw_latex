@@ -1,17 +1,19 @@
 {
   "colors": {
     "test_color": {
-      "border_fill"  : "FF0000",
-      "card_line"    : "000000",
-      "card_fill"    : "0000FF",
-      "panel_line"   : "000000",
-      "panel_fill"   : "FF00FF",
-      "textbox_line" : "000000",
-      "textbox_fill" : "FFFFFF",
-      "textbox_font" : "000000",
-      "title_fill"   : "004422",
-      "title_font"   : "FFFFFF",
-      "cost_font"    : "FFFF00"
+      "border_fill"       : "FF0000",
+      "card_line"         : "000000",
+      "card_fill"         : "0000FF",
+      "panel_line"        : "000000",
+      "panel_fill"        : "FF00FF",
+      "textbox_line"      : "000000",
+      "textbox_fill"      : "FFFFFF",
+      "textbox_font"      : "000000",
+      "title_fill"        : "004422",
+      "title_font"        : "FFFFFF",
+      "cost_font"         : "FFFF00",
+      "box_frame"         : "FF0000",
+      "upgrade_box_frame" : "FFFFFF"
     },
     "black_and_color": {
       "border_fill"  : "FF5500",
