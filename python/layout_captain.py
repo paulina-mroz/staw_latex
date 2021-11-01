@@ -72,7 +72,7 @@ def cardCaptainTex (card, size):
     panel_line_thick = 0.06
     tex = tex + tikzRectangle("panel_lines_style", 0, panel_line2_y2-panel_line_thick, cw, panel_line2_y2) + "\n"
     tex = tex + tikzResizedTextNode("title_style", panel_outer_x1 + 1.3*panel_thick + title_offset, panel_outer_y2 - title_height/2, 0.45, 1.0, title_height - 0.1, card["name"].upper()) + "\n"
-    tex = tex + tikzResizedTextNode("captain_style", panel_outer_x2 - 0.25*title_height, panel_outer_y2 - title_height/2, 0.35, 0.8, title_height - 0.1, r"\textcolor{cost_font}{\contour{card_fill}{CAPTAIN}}") + "\n"
+    tex = tex + tikzResizedTextNode("captain_style", panel_outer_x2 - 0.25*title_height, panel_outer_y2 - title_height/2, 0.35, 0.8, title_height - 0.1, r"\textcolor{skill_font}{\contour{card_fill}{CAPTAIN}}") + "\n"
     tex = tex + r"\end{scope}" + "\n"
     tex = tex + r"\begin{scope}" + "\n"
     tex = tex + tikzCShape("panel_line_style", panel_outer_x1, panel_outer_y1, panel_outer_x2, panel_outer_y2, title_height, panel_thick) + "\n"
@@ -142,7 +142,6 @@ def cardCaptainTex (card, size):
         faction_tex_icons = faction_tex_icons + tikzCircle("clip", faction_x0-i*faction_offset, faction_y0, faction_r0-items_gap2) + "\n"
         faction_tex_icons = faction_tex_icons + tikzTextNode("text_icon_style", faction_x0-i*faction_offset, faction_y0, tikzExternalGraphics(1.4*(faction_r0-items_gap2), 1.4*(faction_r0-items_gap2), "../pics_vector/faction_{:s}.pdf".format(faction) )) + "\n"
         faction_tex_icons = faction_tex_icons + r"\end{scope}" + "\n"
-
         i = i + 1
     tex = tex + r"\begin{scope}" + "\n"
     tex = tex + tikzRectangle("box_outer,  rounded corners={:.2f}cm".format(0.45*cost_height), cost_x1, cost_y1, cost_x2, cost_y2) + "\n"
@@ -156,6 +155,24 @@ def cardCaptainTex (card, size):
     tex = tex + faction_tex_icons
     cardKeysUsed["factions"] = True
     cardKeysUsed["cost"] = True
+
+    if "skill" in card:
+        skill_height = 1.5*box_height
+        skill_x1 = panel_outer_x1 - items_gap
+        skill_x2 = skill_x1 + skill_height
+        skill_y1 = panel_outer_y1 - 2*items_gap - 2*items_gap2
+        skill_y2 = skill_y1 + skill_height
+        tex = tex + r"\begin{scope}" + "\n"
+        tex = tex + tikzRectangle("box_outer,  rounded corners={:.2f}cm".format(0.2*skill_height), skill_x1, skill_y1, skill_x2, skill_y2) + "\n"
+        tex = tex + tikzRectangle("box_middle, rounded corners={:.2f}cm".format(0.2*skill_height-items_gap), skill_x1+items_gap, skill_y1+items_gap, skill_x2-items_gap, skill_y2-items_gap) + "\n"
+        tex = tex + tikzRectangle("box_inner,  rounded corners={:.2f}cm".format(0.2*skill_height-items_gap2), skill_x1+items_gap2, skill_y1+items_gap2, skill_x2-items_gap2, skill_y2-items_gap2) + "\n"
+        skill = str(card["skill"])
+        if skill == "*":
+            skill = r"$\star$"
+        tex = tex + tikzTextNode(r"box_text, text=skill_font, font=\scshape\bfseries\huge", skill_x1+(skill_x2-skill_x1)/2, skill_y1+(skill_y2-skill_y1)/2, r"{:s}".format(skill) ) + "\n"
+        tex = tex + r"\end{scope}" + "\n"
+        cardKeysUsed["skill"] = True
+
 
     card_text = text_wrap + tikzTextReplace(card["text"])
     tex = tex + tikzTextNode("text_style, text width={:.2f}cm".format(textbox_x2-textbox_x1-0.2), textbox_x1+((textbox_x2-textbox_x1)/2), textbox_y2-textbox_gap, card_text) + "\n"
