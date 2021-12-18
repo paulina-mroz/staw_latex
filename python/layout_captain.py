@@ -10,8 +10,8 @@ def cardCaptainTex (card, size):
 
     tex = tex + r"\begin{tikzpicture}" + "\n"
     tex = tex + r"[" + "\n"
-    tex = tex + r"border_style/.style      = {{ fill=border_fill  , draw=none         , line width={:.2f}pt , rounded corners=0.0cm    }},".format(0.0) + "\n"
-    # tex = tex + r"border_style/.style      = {{ fill=none  , draw=white         , line width={:.2f}pt , rounded corners=0.0cm    }},".format(0.0) + "\n"
+    # tex = tex + r"border_style/.style      = {{ fill=border_fill  , draw=none         , line width={:.2f}pt , rounded corners=0.0cm    }},".format(0.0) + "\n"
+    tex = tex + r"border_style/.style      = {{ fill=none    , draw=white        , line width={:.2f}pt , rounded corners=0.0cm    }},".format(0.0) + "\n"
     tex = tex + r"card_style/.style        = {{ fill=none    , draw=card_line    , line width={:.2f}pt , rounded corners={:.2f}cm }},".format(line_width, size["card_round"]) + "\n"
     tex = tex + r"picture_style/.style     = {{anchor=north, inner sep=0, outer sep=0pt}}," + "\n"
     tex = tex + r"textbox_style/.style     = {{ fill=textbox_fill , draw=textbox_line , line width={:.2f}pt , rounded corners={:.2f}cm }},".format(line_width, size["textbox_round"]) + "\n"
@@ -24,6 +24,7 @@ def cardCaptainTex (card, size):
     tex = tex + r"text_icon_style/.style  =  { inner sep=0.05cm , align=center , fill=none , draw=none }," + "\n"
     tex = tex + r"box_inner/.style       =  { draw=none, fill=card_fill }," + "\n"
     tex = tex + r"box_middle/.style      =  { draw=none, fill=box_frame }," + "\n"
+    tex = tex + r"box_talent_middle/.style =  { draw=none, fill=title_font }," + "\n"
     tex = tex + r"box_outer/.style       =  { draw=none, fill=card_fill }," + "\n"
     tex = tex + r"box_uniq_outer/.style  =  { draw=none, fill=panel_fill }," + "\n"
     tex = tex + r"box_upgrade_middle/.style  =  { draw=none, fill=upgrade_box_frame }," + "\n"
@@ -173,6 +174,44 @@ def cardCaptainTex (card, size):
         tex = tex + r"\end{scope}" + "\n"
         cardKeysUsed["skill"] = True
 
+    if "talents" in card:
+        talents = card["talents"]
+        talent_r = 0.75*box_height
+        talent_y = panel_outer_y1 - 2*items_gap - 2*items_gap2 + talent_r
+        if talents == 0:
+            cardKeysUsed["talents"] = True
+        if talents == 1:
+            talent_x = cw/2 - 0.3*talent_r
+            tex = tex + r"\begin{scope}" + "\n"
+            tex = tex + tikzCircle("box_outer", talent_x, talent_y, talent_r) + "\n"
+            tex = tex + tikzCircle("box_talent_middle", talent_x, talent_y, talent_r-items_gap) + "\n"
+            tex = tex + tikzCircle("box_inner", talent_x, talent_y, talent_r-items_gap2) + "\n"
+            tex = tex + r"\end{scope}" + "\n"
+            tex = tex + r"\begin{scope}" + "\n"
+            tex = tex + tikzCircle("clip", talent_x, talent_y, talent_r-items_gap2) + "\n"
+            tex = tex + tikzTextNode("text_icon_style", talent_x, talent_y, tikzExternalGraphics(1.2*talent_r, 1.2*talent_r, "../pics_vector/talent_white.pdf" )) + "\n"
+            tex = tex + r"\end{scope}" + "\n"
+            cardKeysUsed["talents"] = True
+        if talents == 2:
+            talent1_x = cw/2 - 1.4*talent_r
+            talent2_x = talent1_x + 2.1*talent_r
+            tex = tex + r"\begin{scope}" + "\n"
+            tex = tex + tikzCircle("box_outer", talent1_x, talent_y, talent_r) + "\n"
+            tex = tex + tikzCircle("box_outer", talent2_x, talent_y, talent_r) + "\n"
+            tex = tex + tikzCircle("box_talent_middle", talent1_x, talent_y, talent_r-items_gap) + "\n"
+            tex = tex + tikzCircle("box_talent_middle", talent2_x, talent_y, talent_r-items_gap) + "\n"
+            tex = tex + tikzCircle("box_inner", talent1_x, talent_y, talent_r-items_gap2) + "\n"
+            tex = tex + tikzCircle("box_inner", talent2_x, talent_y, talent_r-items_gap2) + "\n"
+            tex = tex + r"\end{scope}" + "\n"
+            tex = tex + r"\begin{scope}" + "\n"
+            tex = tex + tikzCircle("clip", talent1_x, talent_y, talent_r-items_gap2) + "\n"
+            tex = tex + tikzTextNode("text_icon_style", talent1_x, talent_y, tikzExternalGraphics(1.2*talent_r, 1.2*talent_r, "../pics_vector/talent_white.pdf" )) + "\n"
+            tex = tex + r"\end{scope}" + "\n"
+            tex = tex + r"\begin{scope}" + "\n"
+            tex = tex + tikzCircle("clip", talent2_x, talent_y, talent_r-items_gap2) + "\n"
+            tex = tex + tikzTextNode("text_icon_style", talent2_x, talent_y, tikzExternalGraphics(1.2*talent_r, 1.2*talent_r, "../pics_vector/talent_white.pdf" )) + "\n"
+            tex = tex + r"\end{scope}" + "\n"
+            cardKeysUsed["talents"] = True
 
     card_text = text_wrap + tikzTextReplace(card["text"])
     tex = tex + tikzTextNode("text_style, text width={:.2f}cm".format(textbox_x2-textbox_x1-0.2), textbox_x1+((textbox_x2-textbox_x1)/2), textbox_y2-textbox_gap, card_text) + "\n"
