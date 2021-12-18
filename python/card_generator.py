@@ -1,6 +1,6 @@
 import json
 from layout_damage import *
-from layout_captain import *
+from layout_upgrade import *
 
 class CardTexGenerator(object):
     """docstring for CardTexGenerator."""
@@ -106,11 +106,11 @@ class CardTexGenerator(object):
             size = self.cardParams["sizes"][card["type"]]
             texCard = texCard + cardDamageTex(card, size)
             texCardBack = texCardBack + cardBackDamageTex(card, size)
-        elif type == 'captain':
-            size = self.cardParams["sizes"][card["type"]]
-            texCard = texCard + cardCaptainTex(card, size)
+        elif (type == 'captain' or type == 'weapon'):
+            size = self.cardParams["sizes"]["upgrade"]
+            texCard = texCard + cardUpgradeTex(card, size)
             texCardBack = ""
-            # texCardBack = texCardBack + cardBackDamageTex(card)
+            # texCardBack = texCardBack + cardBackUpgradeTex(card)
         else:
             print("Card not found!")
             return ("","")

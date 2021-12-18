@@ -63,7 +63,7 @@
       "textbox_gap"       : 0.1,
       "textbox_round"     : 0.3
     },
-    "captain": {
+    "upgrade": {
       "line_width"        : 0.5,
 
       "border_thick"      : 0.1,

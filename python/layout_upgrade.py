@@ -1,6 +1,6 @@
 from tikz_commands import *
 
-def cardCaptainTex (card, size):
+def cardUpgradeTex (card, size):
     tex = ""
     cardKeysUsed = dict.fromkeys(card.keys(),False)
 
@@ -60,8 +60,9 @@ def cardCaptainTex (card, size):
     panel_outer_y1 = 0 + 2*panel_gap
     panel_outer_y2 = ch - picture_height
     title_offset = 0
-    if card["unique"]:
-        title_offset = 0.15
+    if "unique" in card:
+        if card["unique"]:
+            title_offset = 0.15
     cardKeysUsed["unique"] = True
 
     tex = tex + r"\begin{scope}" + "\n"
@@ -73,7 +74,8 @@ def cardCaptainTex (card, size):
     panel_line_thick = 0.06
     tex = tex + tikzRectangle("panel_lines_style", 0, panel_line2_y2-panel_line_thick, cw, panel_line2_y2) + "\n"
     tex = tex + tikzResizedTextNode("title_style", panel_outer_x1 + 1.3*panel_thick + title_offset, panel_outer_y2 - title_height/2, 0.45, 1.0, title_height - 0.1, card["name"].upper()) + "\n"
-    tex = tex + tikzResizedTextNode("captain_style", panel_outer_x2 - 0.25*title_height, panel_outer_y2 - title_height/2, 0.35, 0.8, title_height - 0.1, r"\textcolor{skill_font}{\contour{card_fill}{CAPTAIN}}") + "\n"
+    if card["type"] == "captain":
+        tex = tex + tikzResizedTextNode("captain_style", panel_outer_x2 - 0.25*title_height, panel_outer_y2 - title_height/2, 0.35, 0.8, title_height - 0.1, r"\textcolor{skill_font}{\contour{card_fill}{CAPTAIN}}") + "\n"
     tex = tex + r"\end{scope}" + "\n"
     tex = tex + r"\begin{scope}" + "\n"
     tex = tex + tikzCShape("panel_line_style", panel_outer_x1, panel_outer_y1, panel_outer_x2, panel_outer_y2, title_height, panel_thick) + "\n"
@@ -90,18 +92,19 @@ def cardCaptainTex (card, size):
 
     items_gap = 0.04
     items_gap2 = 2.5*items_gap
-    if card["unique"]:
-        unique_r = 0.8*panel_thick
-        unique_x = panel_outer_x1+0.9*unique_r
-        unique_y = panel_outer_y2 - title_height/2
-        tex = tex + r"\begin{scope}" + "\n"
-        tex = tex + tikzCircle("box_uniq_outer", unique_x, unique_y, unique_r) + "\n"
-        tex = tex + tikzCircle("box_inner", unique_x, unique_y, unique_r-items_gap) + "\n"
-        tex = tex + r"\end{scope}" + "\n"
-        tex = tex + r"\begin{scope}" + "\n"
-        tex = tex + tikzCircle("clip", unique_x, unique_y, unique_r-items_gap) + "\n"
-        tex = tex + tikzTextNode("text_icon_style", unique_x, unique_y, tikzExternalGraphics(1.4*unique_r, 1.4*unique_r, "../pics_vector/unique.pdf" )) + "\n"
-        tex = tex + r"\end{scope}" + "\n"
+    if "unique" in card:
+        if card["unique"]:
+            unique_r = 0.8*panel_thick
+            unique_x = panel_outer_x1+0.9*unique_r
+            unique_y = panel_outer_y2 - title_height/2
+            tex = tex + r"\begin{scope}" + "\n"
+            tex = tex + tikzCircle("box_uniq_outer", unique_x, unique_y, unique_r) + "\n"
+            tex = tex + tikzCircle("box_inner", unique_x, unique_y, unique_r-items_gap) + "\n"
+            tex = tex + r"\end{scope}" + "\n"
+            tex = tex + r"\begin{scope}" + "\n"
+            tex = tex + tikzCircle("clip", unique_x, unique_y, unique_r-items_gap) + "\n"
+            tex = tex + tikzTextNode("text_icon_style", unique_x, unique_y, tikzExternalGraphics(1.4*unique_r, 1.4*unique_r, "../pics_vector/unique.pdf" )) + "\n"
+            tex = tex + r"\end{scope}" + "\n"
     cardKeysUsed["unique"] = True
 
     text_wrap = ""
