@@ -13,8 +13,7 @@ class CardTexGenerator(object):
         self.data = {}
         self.cardParams = {}
         self.cardToProcess = {}
-        # self.jsonFile = 'data.json'
-        self.jsonFile = 'json/test.json'
+        self.jsonFile = 'json/data.json'
         # self.jsonFile = 'json/damage_deck.json'
         self.jsonParams = 'json/card_style_parameters.json'
         self.outputTexFile = 'tex/cards.tex'
@@ -29,7 +28,7 @@ class CardTexGenerator(object):
 
         self.texContent = ""
 
-        self.cardsId = ["S329", "S322"]
+        self.cardsId = {"captains":["Cap106", "Cap824"], "upgrades":["W201"]}
 
     def print_debug (self, message):
         if self.debug:
@@ -53,7 +52,17 @@ class CardTexGenerator(object):
         self.print_debug("customColors done")
 
     def listCardsToProcess (self):
-        self.cardToProcess = sum(self.data.values(), [])
+        # cardToProcessAll = sum(self.data.values(), [])
+        self.cardToProcess = []
+        for category,cardsIdList in self.cardsId.items():
+            for value in cardsIdList:
+                cardToProcessTmp = [element for element in self.data[category] if element['id'] == value]
+                lenCardToProcessTmp = len(cardToProcessTmp)
+                if lenCardToProcessTmp == 0:
+                    self.print_debug("ID not found: {:10s}".format(value))
+                elif lenCardToProcessTmp > 1:
+                    self.print_debug("ID present more than once {:10s}".format(value))
+                self.cardToProcess.extend(cardToProcessTmp)
         self.print_debug("listCardsToProcess done")
 
     def processCards (self):
