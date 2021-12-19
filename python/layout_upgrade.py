@@ -177,9 +177,10 @@ def cardUpgradeTex (card, size):
     cardKeysUsed["cost"] = True
 
     if "alliance" in card:
-        alliance_x = faction_xn - 0.9*faction_r0
-        alliance_y = panel_outer_y1 + panel_thick/2
-        tex = tex + tikzTextNode("picture_style, anchor=east", alliance_x, alliance_y, tikzExternalGraphics(0, 0.7*panel_thick, "../pics_vector/alliance.pdf")) + "\n"
+        if card["alliance"]:
+            alliance_x = faction_xn - 0.9*faction_r0
+            alliance_y = panel_outer_y1 + panel_thick/2
+            tex = tex + tikzTextNode("picture_style, anchor=east", alliance_x, alliance_y, tikzExternalGraphics(0, 0.7*panel_thick, "../pics_vector/alliance_small.pdf")) + "\n"
     cardKeysUsed["alliance"] = True
 
 
@@ -265,6 +266,7 @@ def cardBackUpgradeTex (card, size):
     tex = tex + r"\begin{tikzpicture}" + "\n"
     tex = tex + r"[" + "\n"
     tex = tex + r"border_style/.style      = {{ fill=back_border_fill  , draw=none         , line width={:.2f}pt , rounded corners=0.0cm    }},".format(0.0) + "\n"
+    tex = tex + r"border_alliance_style/.style = {{ fill=back_alliance_border_fill  , draw=none         , line width={:.2f}pt , rounded corners=0.0cm    }},".format(0.0) + "\n"
     tex = tex + r"picture_style/.style     = {{anchor=north, inner sep=0, outer sep=0pt}}," + "\n"
     tex = tex + r"text_icon_style/.style  =  { inner sep=0.05cm , align=center , fill=none , draw=none }" + "\n"
     tex = tex + r"]" + "\n"
@@ -272,8 +274,16 @@ def cardBackUpgradeTex (card, size):
     border_thick = size["border_thick"]
     picture_height = size["picture_height"]
     tex = tex + r"\begin{scope}" + "\n"
-    tex = tex + tikzRectangle("border_style", 0-border_thick, 0-border_thick, cw+border_thick, ch+border_thick) + "\n"
-    tex = tex + tikzTextNode("picture_style, anchor=center", cw/2, ch/2, tikzExternalGraphics(0, ch/2, "../pics_vector/staw.pdf")) + "\n"
+    alliance = False
+    if "alliance" in card:
+        if card["alliance"]:
+            alliance = True
+    if alliance:
+        tex = tex + tikzRectangle("border_alliance_style", 0-border_thick, 0-border_thick, cw+border_thick, ch+border_thick) + "\n"
+        tex = tex + tikzTextNode("picture_style, anchor=center", cw/2, ch/2, tikzExternalGraphics(0, ch/2, "../pics_vector/alliance.pdf")) + "\n"
+    else:
+        tex = tex + tikzRectangle("border_style", 0-border_thick, 0-border_thick, cw+border_thick, ch+border_thick) + "\n"
+        tex = tex + tikzTextNode("picture_style, anchor=center", cw/2, ch/2, tikzExternalGraphics(0, ch/2, "../pics_vector/staw.pdf")) + "\n"
     tex = tex + r"\end{scope}" + "\n"
 
     tex = tex + r"\end{tikzpicture}" + "\n"
