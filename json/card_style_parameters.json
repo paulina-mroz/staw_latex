@@ -32,6 +32,7 @@
       "box_frame"         : "2277FF",
       "upgrade_box_frame" : "FFFFFF",
 
+      "back_border_fill"   : "0055FF",
       "dmg_back_card_line" : "000000",
       "dmg_back_card_fill" : "9999AA"
     },

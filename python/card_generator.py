@@ -18,13 +18,9 @@ class CardTexGenerator(object):
         self.jsonParams = 'json/card_style_parameters.json'
         self.outputTexFile = 'tex/cards.tex'
 
-        self.colorTheme = "test_color"
-        # self.colorTheme = "black_and_color"
-        # self.colorTheme = "white_and_color"
+        self.colorTheme = "black_and_color"
         self.ifIncludePictures = True
         self.ifIncludeFrame = True
-        self.cardSize = "mini"
-        # self.cardSize = "standard"
 
         self.texContent = ""
 
@@ -129,7 +125,6 @@ class CardTexGenerator(object):
         self.print_debug("cardTex done")
 
     def writeTexFile (self):
-        # print(self.texContent)
         f = open(self.outputTexFile, "w")
         f.write(self.texContent)
         f.close()

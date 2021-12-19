@@ -62,6 +62,9 @@ def cardUpgradeTex (card, size):
     if "unique" in card:
         if card["unique"]:
             title_offset = 0.15
+    if "OnePerShip" in card:
+        if card["OnePerShip"]:
+            title_offset = 0.15
 
     tex = tex + r"\begin{scope}" + "\n"
     tex = tex + tikzCShape("clip"            , panel_outer_x1, panel_outer_y1, panel_outer_x2, panel_outer_y2, title_height, panel_thick) + "\n"
@@ -104,6 +107,20 @@ def cardUpgradeTex (card, size):
             tex = tex + tikzTextNode("text_icon_style", unique_x, unique_y, tikzExternalGraphics(1.4*unique_r, 1.4*unique_r, "../pics_vector/unique.pdf" )) + "\n"
             tex = tex + r"\end{scope}" + "\n"
     cardKeysUsed["unique"] = True
+    if "OnePerShip" in card:
+        if card["OnePerShip"]:
+            onepership_r = 0.8*panel_thick
+            onepership_x = panel_outer_x1+0.9*onepership_r
+            onepership_y = panel_outer_y2 - title_height/2
+            tex = tex + r"\begin{scope}" + "\n"
+            tex = tex + tikzCircle("box_uniq_outer", onepership_x, onepership_y, onepership_r) + "\n"
+            tex = tex + tikzCircle("box_inner", onepership_x, onepership_y, onepership_r-items_gap) + "\n"
+            tex = tex + r"\end{scope}" + "\n"
+            tex = tex + r"\begin{scope}" + "\n"
+            tex = tex + tikzCircle("clip", onepership_x, onepership_y, onepership_r-items_gap) + "\n"
+            tex = tex + tikzTextNode("text_icon_style", onepership_x, onepership_y, tikzExternalGraphics(1.1*onepership_r, 1.1*onepership_r, "../pics_vector/onepership.pdf" )) + "\n"
+            tex = tex + r"\end{scope}" + "\n"
+    cardKeysUsed["OnePerShip"] = True
 
     text_wrap = ""
     box_height = title_height+6*items_gap
@@ -137,12 +154,13 @@ def cardUpgradeTex (card, size):
     faction_tex_icons = ""
     i = 0
     for faction in reversed(card["factions"]):
-        faction_tex_outer  = faction_tex_outer  + tikzCircle("box_outer", faction_x0-i*faction_offset, faction_y0, faction_r0) + "\n"
-        faction_tex_middle = faction_tex_middle + tikzCircle("box_middle", faction_x0-i*faction_offset, faction_y0, faction_r0-items_gap) + "\n"
-        faction_tex_inner  = faction_tex_inner  + tikzCircle("box_inner", faction_x0-i*faction_offset, faction_y0, faction_r0-items_gap2) + "\n"
+        faction_xn = faction_x0-i*faction_offset
+        faction_tex_outer  = faction_tex_outer  + tikzCircle("box_outer", faction_xn, faction_y0, faction_r0) + "\n"
+        faction_tex_middle = faction_tex_middle + tikzCircle("box_middle", faction_xn, faction_y0, faction_r0-items_gap) + "\n"
+        faction_tex_inner  = faction_tex_inner  + tikzCircle("box_inner", faction_xn, faction_y0, faction_r0-items_gap2) + "\n"
         faction_tex_icons = faction_tex_icons + r"\begin{scope}" + "\n"
-        faction_tex_icons = faction_tex_icons + tikzCircle("clip", faction_x0-i*faction_offset, faction_y0, faction_r0-items_gap2) + "\n"
-        faction_tex_icons = faction_tex_icons + tikzTextNode("text_icon_style", faction_x0-i*faction_offset, faction_y0, tikzExternalGraphics(1.4*(faction_r0-items_gap2), 1.4*(faction_r0-items_gap2), "../pics_vector/faction_{:s}.pdf".format(faction) )) + "\n"
+        faction_tex_icons = faction_tex_icons + tikzCircle("clip", faction_xn, faction_y0, faction_r0-items_gap2) + "\n"
+        faction_tex_icons = faction_tex_icons + tikzTextNode("text_icon_style", faction_xn, faction_y0, tikzExternalGraphics(1.4*(faction_r0-items_gap2), 1.4*(faction_r0-items_gap2), "../pics_vector/faction_{:s}.pdf".format(faction) )) + "\n"
         faction_tex_icons = faction_tex_icons + r"\end{scope}" + "\n"
         i = i + 1
     tex = tex + r"\begin{scope}" + "\n"
@@ -157,6 +175,13 @@ def cardUpgradeTex (card, size):
     tex = tex + faction_tex_icons
     cardKeysUsed["factions"] = True
     cardKeysUsed["cost"] = True
+
+    if "alliance" in card:
+        alliance_x = faction_xn - 0.9*faction_r0
+        alliance_y = panel_outer_y1 + panel_thick/2
+        tex = tex + tikzTextNode("picture_style, anchor=east", alliance_x, alliance_y, tikzExternalGraphics(0, 0.7*panel_thick, "../pics_vector/alliance.pdf")) + "\n"
+    cardKeysUsed["alliance"] = True
+
 
     if "skill" in card:
         skill_height = 1.5*box_height
