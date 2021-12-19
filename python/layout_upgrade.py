@@ -24,7 +24,6 @@ def cardUpgradeTex (card, size):
     tex = tex + r"text_icon_style/.style  =  { inner sep=0.05cm , align=center , fill=none , draw=none }," + "\n"
     tex = tex + r"box_inner/.style       =  { draw=none, fill=card_fill }," + "\n"
     tex = tex + r"box_middle/.style      =  { draw=none, fill=box_frame }," + "\n"
-    tex = tex + r"box_talent_middle/.style =  { draw=none, fill=title_font }," + "\n"
     tex = tex + r"box_outer/.style       =  { draw=none, fill=card_fill }," + "\n"
     tex = tex + r"box_uniq_outer/.style  =  { draw=none, fill=panel_fill }," + "\n"
     tex = tex + r"box_upgrade_middle/.style  =  { draw=none, fill=upgrade_box_frame }," + "\n"
@@ -63,7 +62,6 @@ def cardUpgradeTex (card, size):
     if "unique" in card:
         if card["unique"]:
             title_offset = 0.15
-    cardKeysUsed["unique"] = True
 
     tex = tex + r"\begin{scope}" + "\n"
     tex = tex + tikzCShape("clip"            , panel_outer_x1, panel_outer_y1, panel_outer_x2, panel_outer_y2, title_height, panel_thick) + "\n"
@@ -187,7 +185,7 @@ def cardUpgradeTex (card, size):
             talent_x = cw/2 - 0.3*talent_r
             tex = tex + r"\begin{scope}" + "\n"
             tex = tex + tikzCircle("box_outer", talent_x, talent_y, talent_r) + "\n"
-            tex = tex + tikzCircle("box_talent_middle", talent_x, talent_y, talent_r-items_gap) + "\n"
+            tex = tex + tikzCircle("box_upgrade_middle", talent_x, talent_y, talent_r-items_gap) + "\n"
             tex = tex + tikzCircle("box_inner", talent_x, talent_y, talent_r-items_gap2) + "\n"
             tex = tex + r"\end{scope}" + "\n"
             tex = tex + r"\begin{scope}" + "\n"
@@ -201,8 +199,8 @@ def cardUpgradeTex (card, size):
             tex = tex + r"\begin{scope}" + "\n"
             tex = tex + tikzCircle("box_outer", talent1_x, talent_y, talent_r) + "\n"
             tex = tex + tikzCircle("box_outer", talent2_x, talent_y, talent_r) + "\n"
-            tex = tex + tikzCircle("box_talent_middle", talent1_x, talent_y, talent_r-items_gap) + "\n"
-            tex = tex + tikzCircle("box_talent_middle", talent2_x, talent_y, talent_r-items_gap) + "\n"
+            tex = tex + tikzCircle("box_upgrade_middle", talent1_x, talent_y, talent_r-items_gap) + "\n"
+            tex = tex + tikzCircle("box_upgrade_middle", talent2_x, talent_y, talent_r-items_gap) + "\n"
             tex = tex + tikzCircle("box_inner", talent1_x, talent_y, talent_r-items_gap2) + "\n"
             tex = tex + tikzCircle("box_inner", talent2_x, talent_y, talent_r-items_gap2) + "\n"
             tex = tex + r"\end{scope}" + "\n"
@@ -228,4 +226,30 @@ def cardUpgradeTex (card, size):
     for k in cardKeysUsed:
         if cardKeysUsed[k]==False:
             print("WARNING: Property {:20s} not used (in {:10s} {:10s})".format(k, card["type"], card["id"]))
+    return tex
+
+from tikz_commands import *
+
+def cardBackUpgradeTex (card, size):
+    tex = ""
+
+    line_width = size["line_width"]
+    cw = size["card_width"]
+    ch = size["card_height"]
+
+    tex = tex + r"\begin{tikzpicture}" + "\n"
+    tex = tex + r"[" + "\n"
+    tex = tex + r"border_style/.style      = {{ fill=back_border_fill  , draw=none         , line width={:.2f}pt , rounded corners=0.0cm    }},".format(0.0) + "\n"
+    tex = tex + r"picture_style/.style     = {{anchor=north, inner sep=0, outer sep=0pt}}," + "\n"
+    tex = tex + r"text_icon_style/.style  =  { inner sep=0.05cm , align=center , fill=none , draw=none }" + "\n"
+    tex = tex + r"]" + "\n"
+
+    border_thick = size["border_thick"]
+    picture_height = size["picture_height"]
+    tex = tex + r"\begin{scope}" + "\n"
+    tex = tex + tikzRectangle("border_style", 0-border_thick, 0-border_thick, cw+border_thick, ch+border_thick) + "\n"
+    tex = tex + tikzTextNode("picture_style, anchor=center", cw/2, ch/2, tikzExternalGraphics(0, ch/2, "../pics_vector/staw.pdf")) + "\n"
+    tex = tex + r"\end{scope}" + "\n"
+
+    tex = tex + r"\end{tikzpicture}" + "\n"
     return tex

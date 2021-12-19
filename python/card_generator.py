@@ -118,8 +118,7 @@ class CardTexGenerator(object):
         elif (type == 'captain' or type == 'weapon'):
             size = self.cardParams["sizes"]["upgrade"]
             texCard = texCard + cardUpgradeTex(card, size)
-            texCardBack = ""
-            # texCardBack = texCardBack + cardBackUpgradeTex(card)
+            texCardBack = texCardBack + cardBackUpgradeTex(card, size)
         else:
             print("Card not found!")
             return ("","")

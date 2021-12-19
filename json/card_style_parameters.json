@@ -13,7 +13,9 @@
       "title_font"        : "FFFFFF",
       "skill_font"        : "FFFF00",
       "box_frame"         : "FF0000",
-      "upgrade_box_frame" : "FFFFFF"
+      "upgrade_box_frame" : "FFFFFF",
+
+      "back_border_fill" : "0055FF"
     },
     "black_and_color": {
       "border_fill"       : "FF5500",
