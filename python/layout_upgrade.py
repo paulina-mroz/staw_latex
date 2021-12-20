@@ -201,10 +201,25 @@ def cardUpgradeTex (card, size):
         tex = tex + r"\end{scope}" + "\n"
         cardKeysUsed["skill"] = True
 
+    upgrade_r = 0.76*box_height
+    upgrade_y = panel_outer_y1 - 2*items_gap - 2*items_gap2 + upgrade_r
+    if card["type"] in ["borg","crew","question","squadron","talent","tech","weapon"]:
+        upgrade_x = panel_outer_x1 - items_gap - items_gap2/2 + upgrade_r
+        tex = tex + r"\begin{scope}" + "\n"
+        tex = tex + tikzCircle("box_outer", upgrade_x, upgrade_y, upgrade_r) + "\n"
+        tex = tex + tikzCircle("box_upgrade_middle", upgrade_x, upgrade_y, upgrade_r-items_gap) + "\n"
+        tex = tex + tikzCircle("box_inner", upgrade_x, upgrade_y, upgrade_r-items_gap2) + "\n"
+        tex = tex + r"\end{scope}" + "\n"
+        tex = tex + r"\begin{scope}" + "\n"
+        tex = tex + tikzCircle("clip", upgrade_x, upgrade_y, upgrade_r-items_gap2) + "\n"
+        tex = tex + tikzTextNode("text_icon_style", upgrade_x, upgrade_y, tikzExternalGraphics(1.2*upgrade_r, 1.2*upgrade_r, "../pics_vector/{:s}_white.pdf".format(card["type"]) )) + "\n"
+        tex = tex + r"\end{scope}" + "\n"
+    cardKeysUsed["type"] = True
+
     if "talents" in card:
         talents = card["talents"]
-        talent_r = 0.75*box_height
-        talent_y = panel_outer_y1 - 2*items_gap - 2*items_gap2 + talent_r
+        talent_r = upgrade_r
+        talent_y = upgrade_y
         if talents == 0:
             cardKeysUsed["talents"] = True
         if talents == 1:
